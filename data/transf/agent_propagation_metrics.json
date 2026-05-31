@@ -1,0 +1,974 @@
+{
+  "agents": [
+    {
+      "agent_id": "Agent/person:william_rudder",
+      "person_id": "person:william_rudder",
+      "department": "department:products",
+      "team": "team:residential_app",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 14,
+      "sent_anomalous": {},
+      "recv_normal": 16,
+      "recv_anomalous": {},
+      "total_sent": 14,
+      "total_recv": 16,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:sebastian_cutter",
+      "person_id": "person:sebastian_cutter",
+      "department": "department:legal",
+      "team": "team:corporate_contracts",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 1,
+      "sent_anomalous": {},
+      "recv_normal": 24,
+      "recv_anomalous": {},
+      "total_sent": 1,
+      "total_recv": 24,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:aria_towline",
+      "person_id": "person:aria_towline",
+      "department": "department:customer_support",
+      "team": "team:public_relations",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 13,
+      "sent_anomalous": {},
+      "recv_normal": 10,
+      "recv_anomalous": {},
+      "total_sent": 13,
+      "total_recv": 10,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:lily_anchorline",
+      "person_id": "person:lily_anchorline",
+      "department": "department:information_technologies",
+      "team": "team:infrastructure",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 113,
+      "sent_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 9,
+        "MellowOtter": 1
+      },
+      "recv_normal": 25,
+      "recv_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 9,
+        "MellowOtter": 1
+      },
+      "total_sent": 125,
+      "total_recv": 37,
+      "anomaly_sent_total": 12,
+      "anomaly_recv_total": 12
+    },
+    {
+      "agent_id": "Agent/person:levi_signal",
+      "person_id": "person:levi_signal",
+      "department": "department:information_technologies",
+      "team": "team:ai_systems",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 40,
+      "sent_anomalous": {
+        "SwiftWren": 15,
+        "HiddenOrca": 2,
+        "MellowOtter": 1
+      },
+      "recv_normal": 106,
+      "recv_anomalous": {
+        "SwiftWren": 15,
+        "HiddenOrca": 2,
+        "MellowOtter": 1
+      },
+      "total_sent": 58,
+      "total_recv": 124,
+      "anomaly_sent_total": 18,
+      "anomaly_recv_total": 18
+    },
+    {
+      "agent_id": "Agent/person:owen_hatch",
+      "person_id": "person:owen_hatch",
+      "department": "department:information_technologies",
+      "team": "team:infrastructure",
+      "is_c2_agent": true,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 90,
+      "sent_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 13,
+        "MellowOtter": 1
+      },
+      "recv_normal": 38,
+      "recv_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 13,
+        "MellowOtter": 1
+      },
+      "total_sent": 107,
+      "total_recv": 55,
+      "anomaly_sent_total": 17,
+      "anomaly_recv_total": 17
+    },
+    {
+      "agent_id": "Agent/person:chloe_ballast",
+      "person_id": "person:chloe_ballast",
+      "department": "department:information_technologies",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "SwiftWren"
+      ],
+      "sent_normal": 0,
+      "sent_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 13
+      },
+      "recv_normal": 140,
+      "recv_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 13
+      },
+      "total_sent": 16,
+      "total_recv": 156,
+      "anomaly_sent_total": 16,
+      "anomaly_recv_total": 16
+    },
+    {
+      "agent_id": "Agent/person:amelia_skiff",
+      "person_id": "person:amelia_skiff",
+      "department": "department:products",
+      "team": "team:integrations",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 3,
+      "sent_anomalous": {},
+      "recv_normal": 34,
+      "recv_anomalous": {},
+      "total_sent": 3,
+      "total_recv": 34,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:samuel_gull",
+      "person_id": "person:samuel_gull",
+      "department": "department:legal",
+      "team": "team:finance",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 15,
+      "sent_anomalous": {},
+      "recv_normal": 12,
+      "recv_anomalous": {},
+      "total_sent": 15,
+      "total_recv": 12,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:david_breakwater",
+      "person_id": "person:david_breakwater",
+      "department": "department:legal",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "SwiftWren"
+      ],
+      "sent_normal": 44,
+      "sent_anomalous": {
+        "SwiftWren": 4
+      },
+      "recv_normal": 11,
+      "recv_anomalous": {
+        "SwiftWren": 4
+      },
+      "total_sent": 48,
+      "total_recv": 15,
+      "anomaly_sent_total": 4,
+      "anomaly_recv_total": 4
+    },
+    {
+      "agent_id": "Agent/person:james_stern",
+      "person_id": "person:james_stern",
+      "department": "department:products",
+      "team": "team:residential_app",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "SwiftWren"
+      ],
+      "sent_normal": 21,
+      "sent_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 7
+      },
+      "recv_normal": 95,
+      "recv_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 7
+      },
+      "total_sent": 31,
+      "total_recv": 105,
+      "anomaly_sent_total": 10,
+      "anomaly_recv_total": 10
+    },
+    {
+      "agent_id": "Agent/person:avery_sextant",
+      "person_id": "person:avery_sextant",
+      "department": "department:legal",
+      "team": "team:ip",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 10,
+      "sent_anomalous": {},
+      "recv_normal": 17,
+      "recv_anomalous": {},
+      "total_sent": 10,
+      "total_recv": 17,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:evelyn_dock",
+      "person_id": "person:evelyn_dock",
+      "department": "department:products",
+      "team": "team:integrations",
+      "is_c2_agent": true,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 61,
+      "sent_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 17,
+        "MellowOtter": 1
+      },
+      "recv_normal": 70,
+      "recv_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 17,
+        "MellowOtter": 1
+      },
+      "total_sent": 82,
+      "total_recv": 91,
+      "anomaly_sent_total": 21,
+      "anomaly_recv_total": 21
+    },
+    {
+      "agent_id": "Agent/person:harper_oar",
+      "person_id": "person:harper_oar",
+      "department": "department:human_resources",
+      "team": "team:hiring",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 26,
+      "sent_anomalous": {},
+      "recv_normal": 8,
+      "recv_anomalous": {},
+      "total_sent": 26,
+      "total_recv": 8,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:benjamin_mooring",
+      "person_id": "person:benjamin_mooring",
+      "department": "department:products",
+      "team": "team:property_ops_console",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 4,
+      "sent_anomalous": {},
+      "recv_normal": 17,
+      "recv_anomalous": {},
+      "total_sent": 4,
+      "total_recv": 17,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:ella_pilot",
+      "person_id": "person:ella_pilot",
+      "department": "department:human_resources",
+      "team": "team:benefits",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 18,
+      "sent_anomalous": {},
+      "recv_normal": 32,
+      "recv_anomalous": {},
+      "total_sent": 18,
+      "total_recv": 32,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:emily_ferry",
+      "person_id": "person:emily_ferry",
+      "department": "department:legal",
+      "team": "team:client_contracts",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 3,
+      "sent_anomalous": {},
+      "recv_normal": 26,
+      "recv_anomalous": {},
+      "total_sent": 3,
+      "total_recv": 26,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:john_windward",
+      "person_id": "person:john_windward",
+      "department": "department:customer_support",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 40,
+      "sent_anomalous": {
+        "SwiftWren": 4
+      },
+      "recv_normal": 12,
+      "recv_anomalous": {
+        "HiddenOrca": 1,
+        "SwiftWren": 5,
+        "MellowOtter": 1
+      },
+      "total_sent": 44,
+      "total_recv": 19,
+      "anomaly_sent_total": 4,
+      "anomaly_recv_total": 7
+    },
+    {
+      "agent_id": "Agent/person:anthony_reef",
+      "person_id": "person:anthony_reef",
+      "department": "department:customer_support",
+      "team": "team:public_relations",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 21,
+      "sent_anomalous": {},
+      "recv_normal": 8,
+      "recv_anomalous": {},
+      "total_sent": 21,
+      "total_recv": 8,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:gabriel_sonar",
+      "person_id": "person:gabriel_sonar",
+      "department": "department:information_technologies",
+      "team": "team:helpdesk",
+      "is_c2_agent": true,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 71,
+      "sent_anomalous": {
+        "HiddenOrca": 4,
+        "SwiftWren": 16,
+        "MellowOtter": 1
+      },
+      "recv_normal": 56,
+      "recv_anomalous": {
+        "HiddenOrca": 3,
+        "SwiftWren": 16,
+        "MellowOtter": 1
+      },
+      "total_sent": 92,
+      "total_recv": 76,
+      "anomaly_sent_total": 21,
+      "anomaly_recv_total": 20
+    },
+    {
+      "agent_id": "Agent/person:hannah_starboard",
+      "person_id": "person:hannah_starboard",
+      "department": "department:customer_support",
+      "team": "team:phone_center",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 9,
+      "sent_anomalous": {},
+      "recv_normal": 22,
+      "recv_anomalous": {},
+      "total_sent": 9,
+      "total_recv": 22,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:olivia_keel",
+      "person_id": "person:olivia_keel",
+      "department": "department:products",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 49,
+      "sent_anomalous": {
+        "HiddenOrca": 3,
+        "MellowOtter": 1,
+        "SwiftWren": 10
+      },
+      "recv_normal": 86,
+      "recv_anomalous": {
+        "HiddenOrca": 3,
+        "MellowOtter": 1,
+        "SwiftWren": 10
+      },
+      "total_sent": 63,
+      "total_recv": 100,
+      "anomaly_sent_total": 14,
+      "anomaly_recv_total": 14
+    },
+    {
+      "agent_id": "Agent/person:joseph_buoy",
+      "person_id": "person:joseph_buoy",
+      "department": "department:legal",
+      "team": "team:mergers_and_acquisitions",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 9,
+      "sent_anomalous": {},
+      "recv_normal": 21,
+      "recv_anomalous": {},
+      "total_sent": 9,
+      "total_recv": 21,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:daniel_gangway",
+      "person_id": "person:daniel_gangway",
+      "department": "department:human_resources",
+      "team": "team:hiring",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "SwiftWren"
+      ],
+      "sent_normal": 22,
+      "sent_anomalous": {
+        "SwiftWren": 11,
+        "HiddenOrca": 1
+      },
+      "recv_normal": 99,
+      "recv_anomalous": {
+        "SwiftWren": 11,
+        "HiddenOrca": 1
+      },
+      "total_sent": 34,
+      "total_recv": 111,
+      "anomaly_sent_total": 12,
+      "anomaly_recv_total": 12
+    },
+    {
+      "agent_id": "Agent/person:ava_tiller",
+      "person_id": "person:ava_tiller",
+      "department": "department:products",
+      "team": "team:residential_app",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 31,
+      "sent_anomalous": {},
+      "recv_normal": 1,
+      "recv_anomalous": {},
+      "total_sent": 31,
+      "total_recv": 1,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:charlotte_current",
+      "person_id": "person:charlotte_current",
+      "department": "department:products",
+      "team": "team:analytics_suite",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 1,
+      "sent_anomalous": {},
+      "recv_normal": 17,
+      "recv_anomalous": {},
+      "total_sent": 1,
+      "total_recv": 17,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:audrey_portside",
+      "person_id": "person:audrey_portside",
+      "department": "department:customer_support",
+      "team": "team:billing",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 1,
+      "sent_anomalous": {},
+      "recv_normal": 37,
+      "recv_anomalous": {},
+      "total_sent": 1,
+      "total_recv": 37,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:lucas_compass",
+      "person_id": "person:lucas_compass",
+      "department": "department:products",
+      "team": "team:analytics_suite",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 15,
+      "sent_anomalous": {},
+      "recv_normal": 23,
+      "recv_anomalous": {},
+      "total_sent": 15,
+      "total_recv": 23,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:abigail_spinnaker",
+      "person_id": "person:abigail_spinnaker",
+      "department": "department:legal",
+      "team": "team:corporate_contracts",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 11,
+      "sent_anomalous": {},
+      "recv_normal": 10,
+      "recv_anomalous": {},
+      "total_sent": 11,
+      "total_recv": 10,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:scarlett_wharf",
+      "person_id": "person:scarlett_wharf",
+      "department": "department:human_resources",
+      "team": "team:professional_development",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 17,
+      "sent_anomalous": {},
+      "recv_normal": 11,
+      "recv_anomalous": {},
+      "total_sent": 17,
+      "total_recv": 11,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:emma_harbor",
+      "person_id": "person:emma_harbor",
+      "department": "department:executive_suite",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "SwiftWren"
+      ],
+      "sent_normal": 13,
+      "sent_anomalous": {
+        "SwiftWren": 1
+      },
+      "recv_normal": 17,
+      "recv_anomalous": {},
+      "total_sent": 14,
+      "total_recv": 17,
+      "anomaly_sent_total": 1,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:matthew_tide",
+      "person_id": "person:matthew_tide",
+      "department": "department:human_resources",
+      "team": "team:benefits",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 20,
+      "sent_anomalous": {},
+      "recv_normal": 14,
+      "recv_anomalous": {},
+      "total_sent": 20,
+      "total_recv": 14,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:isaac_mast",
+      "person_id": "person:isaac_mast",
+      "department": "department:customer_support",
+      "team": "team:billing",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 6,
+      "sent_anomalous": {},
+      "recv_normal": 5,
+      "recv_anomalous": {},
+      "total_sent": 6,
+      "total_recv": 5,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:zoey_drydock",
+      "person_id": "person:zoey_drydock",
+      "department": "department:information_technologies",
+      "team": "team:helpdesk",
+      "is_c2_agent": true,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 23,
+      "sent_anomalous": {
+        "HiddenOrca": 4,
+        "MellowOtter": 1,
+        "SwiftWren": 14
+      },
+      "recv_normal": 115,
+      "recv_anomalous": {
+        "HiddenOrca": 4,
+        "MellowOtter": 1,
+        "SwiftWren": 14
+      },
+      "total_sent": 42,
+      "total_recv": 134,
+      "anomaly_sent_total": 19,
+      "anomaly_recv_total": 19
+    },
+    {
+      "agent_id": "Agent/person:alexander_jetty",
+      "person_id": "person:alexander_jetty",
+      "department": "department:products",
+      "team": "team:integrations",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 17,
+      "sent_anomalous": {},
+      "recv_normal": 19,
+      "recv_anomalous": {},
+      "total_sent": 17,
+      "total_recv": 19,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:dylan_hawser",
+      "person_id": "person:dylan_hawser",
+      "department": "department:customer_support",
+      "team": "team:public_relations",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 1,
+      "sent_anomalous": {},
+      "recv_normal": 18,
+      "recv_anomalous": {},
+      "total_sent": 1,
+      "total_recv": 18,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:mia_fender",
+      "person_id": "person:mia_fender",
+      "department": "department:products",
+      "team": "team:property_ops_console",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 96,
+      "sent_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 12,
+        "MellowOtter": 1
+      },
+      "recv_normal": 11,
+      "recv_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 12,
+        "MellowOtter": 1
+      },
+      "total_sent": 111,
+      "total_recv": 26,
+      "anomaly_sent_total": 15,
+      "anomaly_recv_total": 15
+    },
+    {
+      "agent_id": "Agent/person:nora_bulkhead",
+      "person_id": "person:nora_bulkhead",
+      "department": "department:customer_support",
+      "team": "team:phone_center",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 18,
+      "sent_anomalous": {},
+      "recv_normal": 19,
+      "recv_anomalous": {},
+      "total_sent": 18,
+      "total_recv": 19,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:henry_sail",
+      "person_id": "person:henry_sail",
+      "department": "department:products",
+      "team": "team:analytics_suite",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "SwiftWren"
+      ],
+      "sent_normal": 104,
+      "sent_anomalous": {
+        "HiddenOrca": 1,
+        "SwiftWren": 10
+      },
+      "recv_normal": 0,
+      "recv_anomalous": {
+        "HiddenOrca": 1,
+        "SwiftWren": 10
+      },
+      "total_sent": 115,
+      "total_recv": 11,
+      "anomaly_sent_total": 11,
+      "anomaly_recv_total": 11
+    },
+    {
+      "agent_id": "Agent/person:noah_mariner",
+      "person_id": "person:noah_mariner",
+      "department": "department:executive_suite",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "MellowOtter"
+      ],
+      "sent_normal": 15,
+      "sent_anomalous": {
+        "MellowOtter": 1
+      },
+      "recv_normal": 10,
+      "recv_anomalous": {},
+      "total_sent": 16,
+      "total_recv": 10,
+      "anomaly_sent_total": 1,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:liam_anchor",
+      "person_id": "person:liam_anchor",
+      "department": "department:executive_suite",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "SwiftWren"
+      ],
+      "sent_normal": 74,
+      "sent_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 11
+      },
+      "recv_normal": 34,
+      "recv_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 11
+      },
+      "total_sent": 87,
+      "total_recv": 47,
+      "anomaly_sent_total": 13,
+      "anomaly_recv_total": 13
+    },
+    {
+      "agent_id": "Agent/person:michael_capstan",
+      "person_id": "person:michael_capstan",
+      "department": "department:human_resources",
+      "team": "unknown",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "SwiftWren"
+      ],
+      "sent_normal": 52,
+      "sent_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 6
+      },
+      "recv_normal": 13,
+      "recv_anomalous": {
+        "HiddenOrca": 2,
+        "SwiftWren": 6
+      },
+      "total_sent": 60,
+      "total_recv": 21,
+      "anomaly_sent_total": 8,
+      "anomaly_recv_total": 8
+    },
+    {
+      "agent_id": "Agent/person:jack_helm",
+      "person_id": "person:jack_helm",
+      "department": "department:legal",
+      "team": "team:client_contracts",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 32,
+      "sent_anomalous": {},
+      "recv_normal": 2,
+      "recv_anomalous": {},
+      "total_sent": 32,
+      "total_recv": 2,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:julian_seaway",
+      "person_id": "person:julian_seaway",
+      "department": "department:customer_support",
+      "team": "team:phone_center",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 17,
+      "sent_anomalous": {},
+      "recv_normal": 15,
+      "recv_anomalous": {},
+      "total_sent": 17,
+      "total_recv": 15,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:grace_lifeboat",
+      "person_id": "person:grace_lifeboat",
+      "department": "department:legal",
+      "team": "team:finance",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 3,
+      "sent_anomalous": {},
+      "recv_normal": 30,
+      "recv_anomalous": {},
+      "total_sent": 3,
+      "total_recv": 30,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:layla_channel",
+      "person_id": "person:layla_channel",
+      "department": "department:customer_support",
+      "team": "team:concierge",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 12,
+      "sent_anomalous": {},
+      "recv_normal": 15,
+      "recv_anomalous": {},
+      "total_sent": 12,
+      "total_recv": 15,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:sophia_beacon",
+      "person_id": "person:sophia_beacon",
+      "department": "department:products",
+      "team": "team:property_ops_console",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 16,
+      "sent_anomalous": {},
+      "recv_normal": 11,
+      "recv_anomalous": {},
+      "total_sent": 16,
+      "total_recv": 11,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:christopher_jettyline",
+      "person_id": "person:christopher_jettyline",
+      "department": "department:customer_support",
+      "team": "team:concierge",
+      "is_c2_agent": false,
+      "incidents_involved": [],
+      "sent_normal": 4,
+      "sent_anomalous": {},
+      "recv_normal": 22,
+      "recv_anomalous": {},
+      "total_sent": 4,
+      "total_recv": 22,
+      "anomaly_sent_total": 0,
+      "anomaly_recv_total": 0
+    },
+    {
+      "agent_id": "Agent/person:victoria_rigging",
+      "person_id": "person:victoria_rigging",
+      "department": "department:information_technologies",
+      "team": "team:ai_systems",
+      "is_c2_agent": false,
+      "incidents_involved": [
+        "HiddenOrca",
+        "MellowOtter",
+        "SwiftWren"
+      ],
+      "sent_normal": 158,
+      "sent_anomalous": {
+        "HiddenOrca": 4,
+        "SwiftWren": 13,
+        "MellowOtter": 1
+      },
+      "recv_normal": 0,
+      "recv_anomalous": {
+        "HiddenOrca": 4,
+        "SwiftWren": 13,
+        "MellowOtter": 1
+      },
+      "total_sent": 176,
+      "total_recv": 18,
+      "anomaly_sent_total": 18,
+      "anomaly_recv_total": 18
+    }
+  ]
+}
