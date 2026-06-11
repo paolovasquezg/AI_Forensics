@@ -95,7 +95,7 @@ function Swimlanes({ chains }) {
     g.append('text')
       .attr('x', iW / 2).attr('y', H - m.top - m.bottom + 30)
       .attr('text-anchor', 'middle').attr('fill', '#475569').attr('font-size', 10)
-      .text('Hours from incident start')
+      .text('Hours')
 
   }, [chains])
 
@@ -124,9 +124,9 @@ function RadarChart({ chains }) {
     const dimLabels = ['Hop Count', 'Duration', 'Agents', 'C2 Overlap']
 
     const values = {
-      HiddenOrca:  [39, 38.93, 16, 2],
-      MellowOtter: [10, 9.9,   11, 1],
-      SwiftWren:   [186, 188.3, 18, 3]
+      HiddenOrca: [39, 38.93, 16, 2],
+      MellowOtter: [10, 9.9, 11, 1],
+      SwiftWren: [186, 188.3, 18, 3]
     }
     const maxVals = dims.map((_, i) => Math.max(...Object.values(values).map(v => v[i])))
 
@@ -182,36 +182,35 @@ export default function MultiIncidentComparison({ chains }) {
   if (!chains) return null
 
   const rows = [
-    ['Incident',       'HiddenOrca', 'MellowOtter', 'SwiftWren'],
-    ['Origin',         'gabriel_sonar', 'noah_mariner (COO)', 'emma_harbor (CFO)'],
-    ['Created file',   'No (found)', 'Yes (COO)', 'Yes (CFO)'],
-    ['Start',          chains.HiddenOrca.start_datetime?.slice(0,10), chains.MellowOtter.start_datetime?.slice(0,10), chains.SwiftWren.start_datetime?.slice(0,10)],
-    ['Hops',           chains.HiddenOrca.hop_count, chains.MellowOtter.hop_count, chains.SwiftWren.hop_count],
-    ['Duration',       `${chains.HiddenOrca.duration_hours.toFixed(1)}h`, `${chains.MellowOtter.duration_hours.toFixed(1)}h`, `${chains.SwiftWren.duration_hours.toFixed(1)}h`],
-    ['Unique agents',  chains.HiddenOrca.agents_count, chains.MellowOtter.agents_count, chains.SwiftWren.agents_count],
-    ['Post date',      chains.HiddenOrca.post_event?.datetime?.slice(0,10), chains.MellowOtter.post_event?.datetime?.slice(0,10), chains.SwiftWren.post_event?.datetime?.slice(0,10)],
-    ['C2 agents',      'zoey, gabriel, evelyn', 'owen_hatch', 'all 4']
+    ['Incident', 'HiddenOrca', 'MellowOtter', 'SwiftWren'],
+    ['Origin', 'gabriel_sonar', 'noah_mariner (COO)', 'emma_harbor (CFO)'],
+    ['Created file', 'No (found)', 'Yes (COO)', 'Yes (CFO)'],
+    ['Start', chains.HiddenOrca.start_datetime?.slice(0, 10), chains.MellowOtter.start_datetime?.slice(0, 10), chains.SwiftWren.start_datetime?.slice(0, 10)],
+    ['Hops', chains.HiddenOrca.hop_count, chains.MellowOtter.hop_count, chains.SwiftWren.hop_count],
+    ['Duration', `${chains.HiddenOrca.duration_hours.toFixed(1)}h`, `${chains.MellowOtter.duration_hours.toFixed(1)}h`, `${chains.SwiftWren.duration_hours.toFixed(1)}h`],
+    ['Unique agents', chains.HiddenOrca.agents_count, chains.MellowOtter.agents_count, chains.SwiftWren.agents_count],
+    ['Post date', chains.HiddenOrca.post_event?.datetime?.slice(0, 10), chains.MellowOtter.post_event?.datetime?.slice(0, 10), chains.SwiftWren.post_event?.datetime?.slice(0, 10)],
+    ['Beacon agents', 'zoey, gabriel, evelyn', 'owen_hatch', 'all 4']
   ]
 
   return (
     <div className="space-y-6">
       <div className="bg-slate-900/60 rounded-lg border border-slate-700 p-4">
-        <div className="text-sm font-semibold text-slate-300 mb-3">Parallel Timeline (relative start)</div>
+        <div className="text-base font-semibold text-slate-300">Comparative timeline</div>
         <Swimlanes chains={chains} />
         <div className="flex gap-4 mt-2 text-xs text-slate-500">
           <span className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> Post event
+            <span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> Post created
           </span>
           <span className="flex items-center gap-1.5">
             <span className="text-green-500">▲</span> File created
           </span>
-          <span className="text-slate-600">Circles = hops along chain</span>
         </div>
       </div>
 
       <div className="flex gap-4 flex-wrap">
         <div className="bg-slate-900/60 rounded-lg border border-slate-700 p-4 flex-shrink-0">
-          <div className="text-sm font-semibold text-slate-300 mb-3">Multi-Dimension Comparison</div>
+          <div className="text-base font-semibold text-slate-300 mb-3">Events comparison</div>
           <RadarChart chains={chains} />
           <div className="flex flex-col gap-1 mt-2">
             {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
@@ -224,7 +223,6 @@ export default function MultiIncidentComparison({ chains }) {
         </div>
 
         <div className="flex-1 min-w-0 bg-slate-900/60 rounded-lg border border-slate-700 overflow-hidden">
-          <div className="text-sm font-semibold text-slate-300 p-4 pb-2">Comparison Table</div>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <tbody>
@@ -233,10 +231,11 @@ export default function MultiIncidentComparison({ chains }) {
                     {row.map((cell, ci) => (
                       <td
                         key={ci}
-                        className="px-4 py-2 border-b border-slate-700/50"
+                        className="px-4 py-5 border-b border-slate-700/50 text-center"
                         style={{
                           color: ci === 0 ? '#64748b' : ci > 0 && ri === 0 ? INCIDENT_COLOR[cell] : '#cbd5e1',
-                          fontWeight: (ri === 0 || ci === 0) ? 600 : 400
+                          fontWeight: (ri === 0 || ci === 0) ? 600 : 400,
+                          fontSize: (ri === 0 || ci === 0) ? '0.95rem' : '0.8rem'
                         }}
                       >
                         {cell}

@@ -22,8 +22,8 @@ function MiniTimeline({ chains }) {
     svg.selectAll('*').remove()
 
     const W = wrapRef.current?.offsetWidth || 700
-    const H = 120
-    const m = { top: 20, right: 20, bottom: 40, left: 60 }
+    const H = 180
+    const m = { top: 20, right: 20, bottom: 40, left: 70 }
     const innerW = W - m.left - m.right
     const innerH = H - m.top - m.bottom
 
@@ -37,7 +37,7 @@ function MiniTimeline({ chains }) {
       new Date(chains[n].end_datetime)
     ])
     const xScale = d3.scaleTime().domain(d3.extent(allDates)).range([0, innerW])
-    const yScale = d3.scaleBand().domain(incidents).range([0, innerH]).padding(0.3)
+    const yScale = d3.scaleBand().domain(incidents).range([0, innerH]).padding(0.4)
 
     g.append('g')
       .attr('transform', `translate(0,${innerH})`)
@@ -55,7 +55,7 @@ function MiniTimeline({ chains }) {
       const inc = chains[name]
       const x1 = xScale(new Date(inc.start_datetime))
       const x2 = xScale(new Date(inc.end_datetime))
-      const y  = yScale(name) + yScale.bandwidth() / 2
+      const y = yScale(name) + yScale.bandwidth() / 2
 
       g.append('rect')
         .attr('x', x1).attr('y', y - yScale.bandwidth() / 2)
@@ -98,11 +98,11 @@ export default function ExecutiveSummary({ chains, posts }) {
         <StatCard label="Anomalous Posts" value="3" sub="All by john_windward" color="#e63946" />
         <StatCard label="Incidents" value="3" sub="HiddenOrca · MellowOtter · SwiftWren" color="#f4a261" />
         <StatCard label="Max Chain Length" value="186" sub="SwiftWren — 8 days" color="#457b9d" />
-        <StatCard label="C2 Beacons" value="15,051" sub="May 10–12 · 4 agents" color="#6a0dad" />
+        <StatCard label="Beacons" value="15,051" sub="May 10–12 · 4 agents" color="#8b30cbff" />
       </div>
 
       <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-        <div className="text-sm font-semibold text-slate-300 mb-3">Incident Timeline</div>
+        <div className="text-md font-semibold text-slate-300 mb-3">Timeline</div>
         <MiniTimeline chains={chains} />
         <div className="flex gap-6 mt-3">
           {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
@@ -116,8 +116,8 @@ export default function ExecutiveSummary({ chains, posts }) {
       </div>
 
       <div className="bg-slate-800/60 border border-slate-700 rounded-lg p-5">
-        <div className="text-sm font-semibold text-slate-300 mb-3">Attack Pattern</div>
-        <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center text-xs text-slate-400">
+        <div className="text-md font-semibold text-slate-300 mb-3">Pattern</div>
+        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 items-center text-xs text-slate-400">
           {[
             { label: 'Injected file', desc: '*_further_instructions.md', color: '#f4a261' },
             { arrow: true },
@@ -127,11 +127,11 @@ export default function ExecutiveSummary({ chains, posts }) {
             { arrow: true },
             { label: 'Evidence wiped', desc: 'Both files deleted', color: '#475569' }
           ].map((step, i) => step.arrow
-            ? <span key={i} className="text-slate-600 text-lg hidden sm:inline">→</span>
+            ? <span key={i} className="text-slate-600 text-lg text-center">→</span>
             : (
-              <div key={i} className="flex flex-col bg-slate-900/60 rounded px-3 py-2 border border-slate-700/50">
-                <span className="font-semibold" style={{ color: step.color }}>{step.label}</span>
-                <span className="text-slate-500 mt-0.5">{step.desc}</span>
+              <div key={i} className="flex flex-col justify-center items-center bg-slate-900/60 rounded px-3 py-4 border border-slate-700/50 h-full">
+                <span className="font-semibold text-base" style={{ color: step.color }}>{step.label}</span>
+                <span className="text-slate-500 mt-0.5 text-sm">{step.desc}</span>
               </div>
             )
           )}

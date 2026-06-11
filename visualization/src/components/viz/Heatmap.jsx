@@ -162,7 +162,7 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="text-xs text-slate-400">Event type:</div>
+        <div className="text-xs text-slate-400">Event:</div>
         {eventTypes.map(t => (
           <button
             key={t}
@@ -183,7 +183,7 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
         <svg ref={svgRef} />
       </div>
 
-      <div className="flex gap-4 text-xs text-slate-500">
+      <div className="flex flex-wrap gap-6 text-xs text-slate-500 items-center">
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 border border-red-500 border-dashed" />
           john_windward row
@@ -191,6 +191,15 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
         <span className="flex items-center gap-1.5">
           <span className="text-red-400">│</span>
           Anomalous post dates
+        </span>
+        <span className="flex items-center gap-2">
+          <span className="text-slate-400">Event count:</span>
+          <span className="text-slate-500">Low</span>
+          <span
+            className="inline-block w-24 h-3 rounded"
+            style={{ background: 'linear-gradient(to right, #f7fbff, #c6dbef, #6baed6, #2171b5, #084594)' }}
+          />
+          <span className="text-slate-500">High</span>
         </span>
       </div>
 

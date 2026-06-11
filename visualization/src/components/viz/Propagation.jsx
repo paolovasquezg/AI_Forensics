@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from '../shared/Tooltip'
-import { INCIDENT_COLOR, DEPT_COLOR, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../../constants'
+import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../../constants'
 
 export default function PropagationNetwork({ chains, agentMetrics, selectedIncident, onIncidentChange }) {
   const svgRef = useRef(null)
@@ -22,8 +22,8 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const W = wrapRef.current?.offsetWidth || 700
-    const H = 480
+    const W = wrapRef.current?.offsetWidth
+    const H = 700
     svg.attr('width', W).attr('height', H)
 
     // Build graph from hops
@@ -180,19 +180,28 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
         <svg ref={svgRef} className="w-full" />
       </div>
 
-      <div className="flex gap-4 text-xs text-slate-500">
+      <div className="flex flex-wrap gap-4 text-xs text-slate-500">
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-full border-2 border-green-500 bg-transparent" />
           Origin agent
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-full border-2 border-red-500 bg-transparent" />
-          Terminal (john_windward)
+          Terminal
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-full border-2 border-purple-400 bg-transparent" />
-          C2 agent
+          Beacon agent
         </span>
+      </div>
+      <div className="flex flex-wrap gap-4 text-xs text-slate-500 mt-1">
+        <span className="text-slate-400 font-medium">Node color by dept:</span>
+        {DEPT_IDS.map(id => (
+          <span key={id} className="flex items-center gap-1.5">
+            <span className="inline-block w-3 h-3 rounded-full" style={{ background: DEPT_COLOR(id) }} />
+            {DEPT_LABELS[id]}
+          </span>
+        ))}
       </div>
 
       {tooltip && <Tooltip x={tooltip.x} y={tooltip.y}>{tooltip.children}</Tooltip>}

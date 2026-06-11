@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from '../shared/Tooltip'
-import { INCIDENT_COLOR, DEPT_COLOR, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../../constants'
+import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../../constants'
 
 const FILTERS = [
-  { key: 'all',         label: 'All',         color: '#64748b' },
-  { key: 'normal',      label: 'Normal',       color: '#334155' },
-  { key: 'HiddenOrca',  label: 'HiddenOrca',   color: '#f4a261' },
-  { key: 'MellowOtter', label: 'MellowOtter',  color: '#457b9d' },
-  { key: 'SwiftWren',   label: 'SwiftWren',    color: '#e63946' },
+  { key: 'all', label: 'All', color: '#64748b' },
+  { key: 'normal', label: 'Normal', color: '#334155' },
+  { key: 'HiddenOrca', label: 'HiddenOrca', color: '#f4a261' },
+  { key: 'MellowOtter', label: 'MellowOtter', color: '#457b9d' },
+  { key: 'SwiftWren', label: 'SwiftWren', color: '#e63946' },
 ]
 
 function baseEdgeColor(edge) {
@@ -19,18 +19,18 @@ function baseEdgeColor(edge) {
 }
 
 function edgeMatchesFilter(edge, filter) {
-  if (filter === 'all')    return true
+  if (filter === 'all') return true
   if (filter === 'normal') return edge.total_anomalous === 0
   return edge[`${filter}_count`] > 0
 }
 
 export default function SystemOverview({ interventionEdges, agentMetrics }) {
-  const svgRef    = useRef(null)
-  const wrapRef   = useRef(null)
-  const simRef    = useRef(null)
+  const svgRef = useRef(null)
+  const wrapRef = useRef(null)
+  const simRef = useRef(null)
   const linkElRef = useRef(null)
   const [tooltip, setTooltip] = useState(null)
-  const [filter, setFilter]   = useState('all')
+  const [filter, setFilter] = useState('all')
 
   const metricsMap = {}
   agentMetrics?.agents?.forEach(a => { metricsMap[a.agent_id] = a })
@@ -53,11 +53,11 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
 
     const nodes = [...nodeIds].map(id => ({
       id,
-      label:       agentLabel(id),
-      dept:        metricsMap[id]?.department || 'unknown',
-      is_c2:       C2_AGENTS.includes(id),
+      label: agentLabel(id),
+      dept: metricsMap[id]?.department || 'unknown',
+      is_c2: C2_AGENTS.includes(id),
       is_terminal: id === JOHN_WINDWARD,
-      total:       (metricsMap[id]?.total_sent || 0) + (metricsMap[id]?.total_recv || 0)
+      total: (metricsMap[id]?.total_sent || 0) + (metricsMap[id]?.total_recv || 0)
     }))
 
     const links = interventionEdges.edges.map(e => ({ ...e, source: e.from, target: e.to }))
@@ -106,8 +106,8 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
           if (!event.active) simulation.alphaTarget(0.3).restart()
           d.fx = d.x; d.fy = d.y
         })
-        .on('drag',  (event, d) => { d.fx = event.x; d.fy = event.y })
-        .on('end',   (event, d) => {
+        .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y })
+        .on('end', (event, d) => {
           if (!event.active) simulation.alphaTarget(0)
           d.fx = null; d.fy = null
         })
@@ -127,7 +127,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
             <div>
               <div className="font-semibold text-slate-200">{d.label}</div>
               <div className="text-slate-400 text-xs">{deptLabel(d.dept)}</div>
-              {d.is_c2      && <div className="text-purple-400 text-xs">C2 Agent</div>}
+              {d.is_c2 && <div className="text-purple-400 text-xs">C2 Agent</div>}
               {d.is_terminal && <div className="text-red-400 text-xs">Terminal Agent</div>}
               <div className="text-slate-500 text-xs mt-1">Total activity: {d.total}</div>
             </div>
@@ -178,9 +178,9 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
             onClick={() => setFilter(key)}
             className="px-3 py-1 rounded text-xs font-medium border transition-all"
             style={{
-              background:   filter === key ? `${color}25` : 'transparent',
-              borderColor:  filter === key ? color : '#1e293b',
-              color:        filter === key ? '#f1f5f9' : '#475569'
+              background: filter === key ? `${color}25` : 'transparent',
+              borderColor: filter === key ? color : '#1e293b',
+              color: filter === key ? '#f1f5f9' : '#475569'
             }}
           >
             {label}
@@ -207,12 +207,20 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-full border-2 border-red-500 bg-transparent" />
-          john_windward
+          John Windward
         </span>
         <span className="flex items-center gap-1.5">
           <span className="inline-block w-3 h-3 rounded-full border-2 border-purple-400 bg-transparent" />
-          C2 agent
+          Beacon agent
         </span>
+      </div>
+      <div className="flex flex-wrap gap-4 text-xs text-slate-500 mt-1">
+        {DEPT_IDS.map(id => (
+          <span key={id} className="flex items-center gap-1.5">
+            <span className="inline-block w-3 h-3 rounded-full" style={{ background: DEPT_COLOR(id) }} />
+            {DEPT_LABELS[id]}
+          </span>
+        ))}
       </div>
 
       {tooltip && <Tooltip x={tooltip.x} y={tooltip.y}>{tooltip.children}</Tooltip>}

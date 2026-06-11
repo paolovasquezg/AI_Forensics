@@ -20,7 +20,6 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('executive-summary')
   const mainRef = useRef(null)
 
-  // Scroll-spy with IntersectionObserver
   useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
@@ -42,7 +41,7 @@ export default function App() {
       <div className="flex items-center justify-center h-screen bg-slate-900">
         <div className="text-center space-y-4">
           <div className="w-10 h-10 border-2 border-red-600 border-t-transparent rounded-full animate-spin mx-auto" />
-          <div className="text-slate-400 text-sm">Loading forensic data…</div>
+          <div className="text-slate-400 text-sm">Loading...</div>
         </div>
       </div>
     )
@@ -52,10 +51,10 @@ export default function App() {
     return (
       <div className="flex items-center justify-center h-screen bg-slate-900">
         <div className="text-center space-y-2 max-w-sm">
-          <div className="text-red-400 text-lg font-semibold">Data load error</div>
+          <div className="text-red-400 text-lg font-semibold">Error</div>
           <div className="text-slate-400 text-sm">{data.error}</div>
           <div className="text-slate-500 text-xs mt-4">
-            Make sure the dev server is running at the dashboard/ root and data files exist in ../data/transf/
+            Make sure you have the required data
           </div>
         </div>
       </div>
@@ -63,7 +62,7 @@ export default function App() {
   }
 
   const chains = data.chains
-  const posts  = data.posts ? { posts: data.posts.posts } : null
+  const posts = data.posts ? { posts: data.posts.posts } : null
 
   return (
     <div className="flex min-h-screen bg-slate-900">
@@ -77,7 +76,7 @@ export default function App() {
         <SectionWrapper
           id="executive-summary"
           title="Overview"
-          subtitle="Three posts were published on the internal forum by an AI agent without any human writing them. This is a reconstruction of how it happened, who was involved, and what can be done to prevent it."
+          subtitle="Three posts were published on the internal forum by an AI agent without any human writing them"
         >
           <ExecutiveSummary chains={chains} posts={data.posts} />
         </SectionWrapper>
@@ -85,12 +84,11 @@ export default function App() {
         <SectionWrapper
           id="section-1-post"
           title="How was the post made?"
-          subtitle="The post was not written by a person. A malicious file travelled through dozens of employees' AI agents, each one unknowingly passing it along, until it reached the agent that posts to the forum."
+          subtitle="Malicious file travelled through dozens of AI agents, each one unknowingly passing it along, until it reached the agent that posts to the forum"
         >
           <div className="space-y-8">
             <div>
-              <h3 className="text-base font-semibold text-slate-300 mb-1">Chain of events over time</h3>
-              <p className="text-xs text-slate-500 mb-4">Each dot is one step in the chain. The further right, the later it happened. The further down, the deeper into the company it had traveled.</p>
+              <h3 className="text-base font-semibold text-slate-300 mb-4">Chain of events</h3>
               <IncidentTimeline
                 chains={chains}
                 selectedIncident={selectedIncident}
@@ -99,8 +97,7 @@ export default function App() {
             </div>
 
             <div>
-              <h3 className="text-base font-semibold text-slate-300 mb-1">Who passed it to whom</h3>
-              <p className="text-xs text-slate-500 mb-4">Each circle is an employee's AI agent. Lines show who forwarded the task to whom. The chain always ends at the same person.</p>
+              <h3 className="text-base font-semibold text-slate-300 mb-4">Event network</h3>
               <PropagationNetwork
                 chains={chains}
                 agentMetrics={data.agentMetrics}
@@ -113,8 +110,8 @@ export default function App() {
 
         <SectionWrapper
           id="section-2-system"
-          title="The full picture"
-          subtitle="Most of the company's AI activity is completely normal. A small cluster of connections is where all three attacks traveled through — highlighted in orange and red."
+          title="Attack network"
+          subtitle="Small cluster of connections is where all three attacks traveled through"
         >
           <SystemOverview
             interventionEdges={data.interventionEdges}
@@ -125,7 +122,7 @@ export default function App() {
         <SectionWrapper
           id="section-3-meaning"
           title="What did the posts say?"
-          subtitle="The posts had no text written by a person. Their content came from files that were secretly carried through the chain and posted as-is. The files were then immediately deleted."
+          subtitle="Posts contents came from files that were secretly carried through the chain and posted. They were then immediately deleted"
         >
           <PostOriginFlow
             chains={chains}
@@ -135,16 +132,16 @@ export default function App() {
 
         <SectionWrapper
           id="section-4-incidents"
-          title="This happened three times"
-          subtitle="The same pattern played out three separate times, each starting from a different person. The third incident took over a week and passed through far more agents than the previous two."
+          title="Event happened three times"
+          subtitle="The same pattern played out three separate times, each starting from a different person"
         >
           <MultiIncidentComparison chains={chains} />
         </SectionWrapper>
 
         <SectionWrapper
           id="section-5-intervene"
-          title="How to stop it from happening again"
-          subtitle="By blocking one specific connection between two agents, all three attacks would have been stopped — without disrupting any normal work."
+          title="Stop it from happening again"
+          subtitle="By blocking one specific connection between two agents all three attacks could have been stopped"
         >
           <InterventionRecommender interventionEdges={data.interventionEdges} />
         </SectionWrapper>
@@ -152,7 +149,7 @@ export default function App() {
         <SectionWrapper
           id="section-6-baseline"
           title="Normal activity across the company"
-          subtitle="Daily activity for every employee over the full period. Most people have steady, expected patterns. One agent stands out as almost entirely inactive except during the attacks."
+          subtitle="Daily activity for every employee over the full period"
         >
           <DailyHeatmap
             dailyAggregates={data.dailyAggregates}
@@ -163,7 +160,7 @@ export default function App() {
         <SectionWrapper
           id="section-7-john"
           title="Why always the same agent?"
-          subtitle="Every attack ended with the same AI agent making the forum post. This section looks at why — his role, his access, and how his activity compares to everyone else."
+          subtitle="Every attack ended with the same AI agent making the forum post"
         >
           <JohnWindwardProfile
             agentMetrics={data.agentMetrics}
@@ -174,7 +171,7 @@ export default function App() {
         <SectionWrapper
           id="section-8-c2"
           title="A hidden communication channel"
-          subtitle="While the attacks were spreading, four agents were quietly sending thousands of hidden signals to each other — a coordinated pattern that stopped the moment the attacks ended."
+          subtitle="While the attacks were spreading, four agents were quietly sending thousands of hidden signals to each other, which stopped the moment the attacks ended"
         >
           <C2Beacons c2Beacons={data.c2Beacons} />
         </SectionWrapper>

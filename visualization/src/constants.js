@@ -3,10 +3,10 @@ import * as d3 from 'd3'
 export const INCIDENT_NAMES = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
 
 export const INCIDENT_COLOR = {
-  normal:      '#64748b',
-  HiddenOrca:  '#f4a261',
+  normal: '#64748b',
+  HiddenOrca: '#f4a261',
   MellowOtter: '#457b9d',
-  SwiftWren:   '#e63946'
+  SwiftWren: '#e63946'
 }
 
 export const DEPT_IDS = [
@@ -19,12 +19,12 @@ export const DEPT_IDS = [
 ]
 
 export const DEPT_LABELS = {
-  'department:executive_suite':       'Executive Suite',
-  'department:products':              'Products',
-  'department:human_resources':       'HR',
-  'department:legal':                 'Legal',
+  'department:executive_suite': 'Executive Suite',
+  'department:products': 'Products',
+  'department:human_resources': 'HR',
+  'department:legal': 'Legal',
   'department:information_technologies': 'IT',
-  'department:customer_support':      'Customer Support'
+  'department:customer_support': 'Customer Support'
 }
 
 export const DEPT_COLOR = d3.scaleOrdinal()
@@ -55,20 +55,20 @@ export const shortDate = (dt) => {
 }
 
 export const SECTIONS = [
-  { id: 'executive-summary',  label: 'Overview' },
-  { id: 'section-1-post',     label: 'How was the post made?' },
-  { id: 'section-2-system',   label: 'The full picture' },
-  { id: 'section-3-meaning',  label: 'What did the posts say?' },
-  { id: 'section-4-incidents',label: 'This happened three times' },
-  { id: 'section-5-intervene',label: 'How to stop it' },
+  { id: 'executive-summary', label: 'Overview' },
+  { id: 'section-1-post', label: 'How the post was made' },
+  { id: 'section-2-system', label: 'Attack network' },
+  { id: 'section-3-meaning', label: 'What the posts said' },
+  { id: 'section-4-incidents', label: 'Three incidents' },
+  { id: 'section-5-intervene', label: 'Stop it from happening' },
   { id: 'section-6-baseline', label: 'Normal activity' },
-  { id: 'section-7-john',     label: 'Why always the same agent?' },
-  { id: 'section-8-c2',       label: 'A hidden channel' }
+  { id: 'section-7-john', label: 'Why the same agent?' },
+  { id: 'section-8-c2', label: 'Hidden channel' }
 ]
 
 export const COMBO_COLORS = d3.scaleOrdinal()
-  .domain(["fence,irrigation","barn,cattle","crop,irrigation","manure,wheat","crop,harvest"])
-  .range(["#38bdf8","#34d399","#fb923c","#f472b6","#a78bfa"])
+  .domain(["fence,irrigation", "barn,cattle", "crop,irrigation", "manure,wheat", "crop,harvest"])
+  .range(["#38bdf8", "#34d399", "#fb923c", "#f472b6", "#a78bfa"])
 
 export function buildPersonDeptLookup(graphData) {
   if (!graphData) return {}

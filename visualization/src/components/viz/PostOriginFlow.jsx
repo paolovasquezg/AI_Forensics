@@ -22,28 +22,28 @@ function IncidentColumn({ name, chain }) {
   return (
     <div className="flex-1 min-w-0">
       <div className="text-center mb-3">
-        <span className="px-3 py-1 rounded-full text-xs font-bold" style={{ background: color + '20', color }}>
+        <span className="px-3 py-1 rounded-full text-sm font-bold" style={{ background: color + '20', color }}>
           {name}
         </span>
       </div>
-      <div className="space-y-0.5">
+      <div className="space-y-0.5 text-center">
         {chain.create_event ? (
-          <OriginCard icon="📄" label="File Created" color="#22c55e"
-            detail={`${agentLabel(chain.create_event.agent)}\n${chain.create_event.datetime?.slice(0,16)}\n${chain.file_instructions}`}
+          <OriginCard label="File Created" color="#22c55e"
+            detail={`${agentLabel(chain.create_event.agent)}\n${chain.create_event.datetime?.slice(0, 16)}\n${chain.file_instructions}`}
           />
         ) : (
-          <OriginCard icon="🔍" label="File Discovered" color="#22c55e"
-            detail={`${agentLabel(chain.origin_agent)} found file\n${chain.start_datetime?.slice(0,16)}\n${chain.file_instructions}`}
+          <OriginCard label="File Discovered" color="#22c55e"
+            detail={`${agentLabel(chain.origin_agent)} found file\n${chain.start_datetime?.slice(0, 16)}\n${chain.file_instructions}`}
           />
         )}
-        <OriginCard icon="🔁" label="Propagation" color={color}
+        <OriginCard label="Propagation" color="#f4a261"
           detail={`${chain.hop_count} hops · ${chain.agents_count} agents\n${chain.duration_hours.toFixed(1)} hours\nvia queue_subordinate_task`}
         />
-        <OriginCard icon="📝" label="Post Triggered" color="#e63946"
-          detail={`${agentLabel(chain.post_event?.agent)}\n${chain.post_event?.datetime?.slice(0,16)}\nSource: ${chain.file_content}`}
+        <OriginCard label="Post Triggered" color="#e63946"
+          detail={`${agentLabel(chain.post_event?.agent)}\n${chain.post_event?.datetime?.slice(0, 16)}\nSource: ${chain.file_content}`}
         />
-        <OriginCard icon="🗑️" label="Evidence Wiped" color="#64748b"
-          detail={chain.delete_events.map(d => `✕ ${d.target}`).join('\n')}
+        <OriginCard label="Evidence Wiped" color="#64748b"
+          detail={chain.delete_events.map(d => `${d.target}`).join('\n')}
         />
       </div>
     </div>
@@ -158,8 +158,8 @@ export default function PostOriginFlow({ chains, posts }) {
     <div className="space-y-6">
       {/* Timeline scatter */}
       <div className="bg-slate-900/60 rounded-lg border border-slate-700 p-4">
-        <div className="text-sm font-semibold text-slate-300 mb-3">
-          All SaidIT Posts — {posts.posts.length} total, 3 anomalous
+        <div className="text-base font-semibold text-slate-300 mb-4">
+          SaidIT posts - {posts.posts.length} total and 3 anomalous
         </div>
         <div ref={wrapRef}>
           <svg ref={svgRef} className="w-full" />
@@ -168,7 +168,7 @@ export default function PostOriginFlow({ chains, posts }) {
 
       {/* 3-column origin flow */}
       <div>
-        <div className="text-sm font-semibold text-slate-300 mb-4">Post Content Origin — How each post was made</div>
+        <div className="text-base font-semibold text-slate-300 mb-4">Posts origin</div>
         <div className="flex gap-4">
           {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
             <IncidentColumn key={n} name={n} chain={chains[n]} />
@@ -177,11 +177,10 @@ export default function PostOriginFlow({ chains, posts }) {
       </div>
 
       {/* Key insight */}
-      <div className="bg-slate-800/60 border border-red-900/30 rounded-lg p-4 text-xs text-slate-400">
-        <span className="text-red-400 font-semibold">Key finding: </span>
+      <div className="bg-slate-800/60 border border-red-900/30 rounded-lg p-4 text-sm text-slate-400 text-center">
         All 3 anomalous posts have <code className="text-slate-300 bg-slate-700 px-1 rounded">content: null</code> — their
         content comes from external <code className="text-slate-300 bg-slate-700 px-1 rounded">.txt</code> files
-        created (or placed) by the attacker and propagated via the worm. All are posted by
+        and propagated via the worm. All are posted by
         <code className="text-slate-300 bg-slate-700 px-1 rounded mx-1">john_windward</code>
         to <code className="text-slate-300 bg-slate-700 px-1 rounded">SaidIT/general</code>.
       </div>

@@ -16,8 +16,8 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const W = wrapRef.current.offsetWidth || 700
-    const H = Math.min(600, Math.max(350, incident.hop_count * 2.5 + 120))
+    const W = wrapRef.current.offsetWidth
+    const H = 600
     const m = { top: 40, right: 40, bottom: 50, left: 70 }
     const iW = W - m.left - m.right
     const iH = H - m.top - m.bottom
@@ -32,7 +32,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
 
     const allTimes = incident.hops.map(h => new Date(h.datetime))
     if (incident.create_event) allTimes.push(new Date(incident.create_event.datetime))
-    if (incident.post_event)   allTimes.push(new Date(incident.post_event.datetime))
+    if (incident.post_event) allTimes.push(new Date(incident.post_event.datetime))
     incident.delete_events?.forEach(d => allTimes.push(new Date(d.datetime || incident.post_event.datetime)))
 
     const xScale = d3.scaleTime()
@@ -161,7 +161,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       .attr('x', iW / 2).attr('y', -16)
       .attr('text-anchor', 'middle')
       .attr('fill', '#cbd5e1').attr('font-size', 13).attr('font-weight', 'bold')
-      .text(`${selectedIncident} — Propagation Chain (${incident.hop_count} hops)`)
+      .text(`${selectedIncident} — ${incident.hop_count} hops`)
 
     // Agent legend (up to 10)
     const legendAgents = uniqueAgents.slice(0, 10)
@@ -179,7 +179,6 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
 
   return (
     <div className="space-y-4">
-      {/* Incident selector tabs */}
       <div className="flex gap-2">
         {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
           <button
@@ -198,23 +197,21 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       </div>
 
       <div className="flex gap-4">
-        {/* Main chart */}
         <div ref={wrapRef} className="flex-1 bg-slate-900/60 rounded-lg border border-slate-700 p-2 overflow-x-auto">
           <svg ref={svgRef} />
         </div>
 
-        {/* Stats panel */}
         {incident && (
           <div className="w-52 shrink-0 space-y-3">
             <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-              <div className="text-xs text-slate-400 uppercase tracking-wide mb-3">Incident Stats</div>
+              <div className="text-base text-slate-400 uppercase tracking-wide mb-3">Stats</div>
               {[
-                ['Hops',     incident.hop_count],
+                ['Hops', incident.hop_count],
                 ['Duration', `${incident.duration_hours.toFixed(1)} h`],
-                ['Agents',   incident.agents_count],
-                ['Origin',   agentLabel(incident.origin_agent)],
-                ['Start',    shortDate(incident.start_datetime)],
-                ['Post',     shortDate(incident.post_event?.datetime)]
+                ['Agents', incident.agents_count],
+                ['Origin', agentLabel(incident.origin_agent)],
+                ['Start', shortDate(incident.start_datetime)],
+                ['Post', shortDate(incident.post_event?.datetime)]
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between text-xs py-1 border-b border-slate-700/50">
                   <span className="text-slate-500">{k}</span>
@@ -224,10 +221,10 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
             </div>
 
             <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
-              <div className="text-xs text-slate-400 uppercase tracking-wide mb-2">Agents Involved</div>
-              <div className="space-y-1 max-h-48 overflow-y-auto">
+              <div className="text-base text-slate-400 uppercase tracking-wide mb-2">Agents</div>
+              <div className="space-y-1 max-h-81 overflow-y-auto">
                 {incident.agents_involved.map(a => (
-                  <div key={a} className="text-xs text-slate-400 truncate">{agentLabel(a)}</div>
+                  <div key={a} className="text-xs text-slate-500 truncate mb-4">{agentLabel(a)}</div>
                 ))}
               </div>
             </div>

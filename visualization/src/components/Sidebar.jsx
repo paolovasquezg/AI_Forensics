@@ -5,12 +5,11 @@ export default function Sidebar({ activeSection, selectedIncident, onIncidentCha
     <aside className="w-56 shrink-0 sticky top-0 h-screen overflow-y-auto bg-slate-800/60 border-r border-slate-700 flex flex-col">
       <div className="p-4 border-b border-slate-700">
         <div className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">VAST 2026 MC2</div>
-        <div className="text-sm font-bold text-slate-100 leading-tight">Tenant Thread Forensics</div>
+        <div className="text-sm font-bold text-slate-100 leading-tight">AI Forensics</div>
       </div>
 
-      {/* Incident selector */}
       <div className="p-4 border-b border-slate-700">
-        <div className="text-xs text-slate-400 mb-2 font-medium uppercase tracking-wide">Active Incident</div>
+        <div className="text-xs text-slate-400 mb-2 font-medium uppercase tracking-wide">Incidents</div>
         <div className="flex flex-col gap-1.5">
           {INCIDENT_NAMES.map(name => (
             <button
@@ -62,7 +61,7 @@ export default function Sidebar({ activeSection, selectedIncident, onIncidentCha
       </nav>
 
       <div className="p-4 border-t border-slate-700 text-xs text-slate-500">
-        185k events · May 8 – Jul 16, 2046
+        May 8 – Jul 16, 2046
       </div>
     </aside>
   )

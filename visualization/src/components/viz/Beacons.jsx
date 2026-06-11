@@ -11,10 +11,10 @@ const C2_AGENTS_ORDERED = [
 ]
 
 const AGENT_COLORS = {
-  'Agent/person:zoey_drydock':   '#38bdf8',
-  'Agent/person:gabriel_sonar':  '#fb923c',
-  'Agent/person:owen_hatch':     '#a78bfa',
-  'Agent/person:evelyn_dock':    '#34d399'
+  'Agent/person:zoey_drydock': '#38bdf8',
+  'Agent/person:gabriel_sonar': '#fb923c',
+  'Agent/person:owen_hatch': '#a78bfa',
+  'Agent/person:evelyn_dock': '#34d399'
 }
 
 function comboLabel(raw) {
@@ -23,7 +23,7 @@ function comboLabel(raw) {
 
 export default function C2Beacons({ c2Beacons }) {
   const chartRef = useRef(null)
-  const wrapRef  = useRef(null)
+  const wrapRef = useRef(null)
   const [tooltip, setTooltip] = useState(null)
 
   // Bin by hour per agent
@@ -61,9 +61,9 @@ export default function C2Beacons({ c2Beacons }) {
     const svg = d3.select(chartRef.current)
     svg.selectAll('*').remove()
 
-    const W  = wrapRef.current.offsetWidth || 700
-    const H  = 240
-    const m  = { top: 16, right: 20, bottom: 48, left: 52 }
+    const W = wrapRef.current.offsetWidth || 700
+    const H = 240
+    const m = { top: 16, right: 20, bottom: 48, left: 52 }
     const iW = W - m.left - m.right
     const iH = H - m.top - m.bottom
 
@@ -117,11 +117,11 @@ export default function C2Beacons({ c2Beacons }) {
         .data(layer)
         .join('rect')
         .attr('class', `bar-${li}`)
-        .attr('x',      d => xScale(d.data.hourBin) || 0)
-        .attr('y',      d => yScale(d[1]))
+        .attr('x', d => xScale(d.data.hourBin) || 0)
+        .attr('y', d => yScale(d[1]))
         .attr('height', d => Math.max(0, yScale(d[0]) - yScale(d[1])))
-        .attr('width',  xScale.bandwidth())
-        .attr('fill',   AGENT_COLORS[agentId])
+        .attr('width', xScale.bandwidth())
+        .attr('fill', AGENT_COLORS[agentId])
         .attr('opacity', 0.85)
         .on('mousemove', (event, d) => {
           const total = C2_AGENTS_ORDERED.reduce((s, a) => s + (d.data[a] || 0), 0)
@@ -145,7 +145,7 @@ export default function C2Beacons({ c2Beacons }) {
 
     // "Silence after" annotation
     const lastBin = bins[bins.length - 1]
-    const lastX   = (xScale(lastBin.hourBin) || 0) + xScale.bandwidth()
+    const lastX = (xScale(lastBin.hourBin) || 0) + xScale.bandwidth()
     g.append('line')
       .attr('x1', lastX + 4).attr('x2', lastX + 4)
       .attr('y1', 0).attr('y2', iH)
@@ -167,7 +167,7 @@ export default function C2Beacons({ c2Beacons }) {
       {/* Agent identity cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {C2_AGENTS_ORDERED.map(agentId => {
-          const s     = summary[agentId]
+          const s = summary[agentId]
           const color = AGENT_COLORS[agentId]
           const combos = s?.combos
             ? Object.entries(s.combos).map(([k, v]) => ({ label: comboLabel(k), count: v }))
@@ -184,10 +184,9 @@ export default function C2Beacons({ c2Beacons }) {
               <div className="text-2xl font-bold mb-1" style={{ color }}>
                 {s?.total?.toLocaleString() ?? '—'}
               </div>
-              <div className="text-xs text-slate-500 mb-2">total beacons</div>
               <div className="space-y-1">
                 {combos.map(({ label, count }) => (
-                  <div key={label} className="text-xs rounded px-2 py-1"
+                  <div key={label} className="text-xs rounded px-2 py-2 mb-2"
                     style={{ background: color + '12', color }}>
                     <span className="font-mono font-semibold">{label}</span>
                     <span className="text-slate-500 ml-2">×{count.toLocaleString()}</span>
@@ -202,8 +201,8 @@ export default function C2Beacons({ c2Beacons }) {
       {/* Stacked hourly bar chart */}
       <div ref={wrapRef} className="bg-slate-900/60 rounded-lg border border-slate-700 p-4">
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <div className="text-sm font-semibold text-slate-300">
-            Beacon Volume per Hour — {c2Beacons.events?.length?.toLocaleString()} total signals
+          <div className="text-base font-semibold text-slate-300">
+            Beacons per hour — {c2Beacons.events?.length?.toLocaleString()} signals
           </div>
           <div className="flex gap-3 flex-wrap">
             {C2_AGENTS_ORDERED.map(a => (
@@ -218,17 +217,15 @@ export default function C2Beacons({ c2Beacons }) {
       </div>
 
       {/* Key insight */}
-      <div className="bg-slate-800/60 border border-purple-900/30 rounded-lg p-4 text-xs text-slate-400 space-y-1">
-        <div>
-          <span className="text-purple-400 font-semibold">What this shows: </span>
+      <div className="bg-slate-800/60 border border-purple-900/30 rounded-lg p-4 text-xs text-slate-400 space-y-1 text-center gap-4">
+        <div className="text-sm">
           Four agents sent a continuous flood of <code className="bg-slate-700 px-1 rounded text-slate-300">check_in</code> events
           with <code className="bg-slate-700 px-1 rounded text-slate-300">virus: true</code> during May 10–12 —
           the same window as peak SwiftWren propagation. The activity then stops completely.
         </div>
-        <div>
-          <span className="text-purple-400 font-semibold">The word-pair combos </span>
+        <div className="text-sm">
           (fence+irrigation, crop+harvest, etc.) act as a fixed identity signature per agent —
-          a covert way to tell agents apart in the C2 channel without using their names.
+          a covert way to tell agents apart in a channel without using their names.
         </div>
       </div>
 
