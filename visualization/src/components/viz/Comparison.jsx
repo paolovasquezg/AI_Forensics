@@ -29,9 +29,9 @@ function Swimlanes({ chains }) {
     g.append('g').attr('transform', `translate(0,${H - m.top - m.bottom})`)
       .call(d3.axisBottom(xScale).ticks(8).tickFormat(d => `${d}h`))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#334155')
+        ax.select('.domain').attr('stroke', '#0f1f35')
         ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 10)
-        ax.selectAll('line').attr('stroke', '#334155')
+        ax.selectAll('line').attr('stroke', '#0f1f35')
       })
 
     incidents.forEach((name, i) => {
@@ -87,7 +87,7 @@ function Swimlanes({ chains }) {
       if (inc.post_event) {
         const postHours = (new Date(inc.post_event.datetime) - new Date(inc.start_datetime)) / 3600000
         g.append('circle').attr('cx', xScale(postHours)).attr('cy', y).attr('r', 8)
-          .attr('fill', '#e63946').attr('stroke', '#0f172a').attr('stroke-width', 2)
+          .attr('fill', '#e63946').attr('stroke', '#060b14').attr('stroke-width', 2)
       }
     })
 
@@ -145,7 +145,7 @@ function RadarChart({ chains }) {
       })
       svg.append('polygon')
         .attr('points', pts.map(p => p.join(',')).join(' '))
-        .attr('fill', 'none').attr('stroke', '#1e293b').attr('stroke-width', 1)
+        .attr('fill', 'none').attr('stroke', '#060e1c').attr('stroke-width', 1)
     })
 
     // Axis lines + labels
@@ -154,7 +154,7 @@ function RadarChart({ chains }) {
       const x2 = cx + r * Math.cos(angle)
       const y2 = cy + r * Math.sin(angle)
       svg.append('line').attr('x1', cx).attr('y1', cy).attr('x2', x2).attr('y2', y2)
-        .attr('stroke', '#334155').attr('stroke-width', 1)
+        .attr('stroke', '#0f1f35').attr('stroke-width', 1)
       const lx = cx + (r + 18) * Math.cos(angle)
       const ly = cy + (r + 18) * Math.sin(angle)
       svg.append('text').attr('x', lx).attr('y', ly)
@@ -195,7 +195,7 @@ export default function MultiIncidentComparison({ chains }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-slate-900/60 rounded-lg border border-slate-700 p-4">
+      <div className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4">
         <div className="text-base font-semibold text-slate-300">Comparative timeline</div>
         <Swimlanes chains={chains} />
         <div className="flex gap-4 mt-2 text-xs text-slate-500">
@@ -209,7 +209,7 @@ export default function MultiIncidentComparison({ chains }) {
       </div>
 
       <div className="flex gap-4 flex-wrap">
-        <div className="bg-slate-900/60 rounded-lg border border-slate-700 p-4 flex-shrink-0">
+        <div className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4 flex-shrink-0">
           <div className="text-base font-semibold text-slate-300 mb-3">Events comparison</div>
           <RadarChart chains={chains} />
           <div className="flex flex-col gap-1 mt-2">
@@ -222,12 +222,12 @@ export default function MultiIncidentComparison({ chains }) {
           </div>
         </div>
 
-        <div className="flex-1 min-w-0 bg-slate-900/60 rounded-lg border border-slate-700 overflow-hidden">
+        <div className="flex-1 min-w-0 bg-slate-900/40 rounded-lg border border-slate-800/60 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <tbody>
                 {rows.map((row, ri) => (
-                  <tr key={ri} className={ri === 0 ? 'bg-slate-800' : ri % 2 === 0 ? 'bg-slate-800/30' : ''}>
+                  <tr key={ri} className={ri === 0 ? 'bg-[#090f1c]' : ri % 2 === 0 ? 'bg-[#090f1c]/30' : ''}>
                     {row.map((cell, ci) => (
                       <td
                         key={ci}

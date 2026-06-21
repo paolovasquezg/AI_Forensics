@@ -44,9 +44,9 @@ export default function InterventionRecommender({ interventionEdges }) {
     g.append('g').attr('transform', `translate(0,${top.length * ROW})`)
       .call(d3.axisBottom(xScale).ticks(5).tickFormat(d => `${d} uses`))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#334155')
+        ax.select('.domain').attr('stroke', '#0f1f35')
         ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 10)
-        ax.selectAll('line').attr('stroke', '#1e293b')
+        ax.selectAll('line').attr('stroke', '#060e1c')
       })
 
     const rowG = g.selectAll('.row')
@@ -59,7 +59,7 @@ export default function InterventionRecommender({ interventionEdges }) {
       .attr('x', -m.left).attr('y', (_, i) => yScale(i) - 2)
       .attr('width', W).attr('height', yScale.bandwidth() + 4)
       .attr('fill', 'transparent')
-      .on('mouseover', function () { d3.select(this).attr('fill', 'rgba(51,65,85,0.4)') })
+      .on('mouseover', function () { d3.select(this).attr('fill', 'rgba(13,24,41,0.6)') })
       .on('mouseout', function () { d3.select(this).attr('fill', 'transparent') })
 
     // Agent label (left)
@@ -133,7 +133,7 @@ export default function InterventionRecommender({ interventionEdges }) {
 
       {/* Top recommendation card */}
       {best && (
-        <div className="bg-slate-800 border border-red-900/50 rounded-lg p-5">
+        <div className="bg-[#090f1c] border border-red-900/30 rounded-lg p-5 border-l-2 border-l-red-700/60">
           <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Top recommendation</div>
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
@@ -175,7 +175,7 @@ export default function InterventionRecommender({ interventionEdges }) {
       )}
 
       {/* Stacked bar chart */}
-      <div ref={wrapRef} className="bg-slate-900/60 rounded-lg border border-slate-700 p-4">
+      <div ref={wrapRef} className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="text-base font-semibold text-slate-300">Top 10 candidate edges</div>
           <div className="flex gap-3">
@@ -191,7 +191,7 @@ export default function InterventionRecommender({ interventionEdges }) {
       </div>
 
       {detail && (
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 space-y-3">
+        <div className="bg-slate-900/80 border border-slate-800/60 rounded-lg p-4 space-y-3">
           <div className="text-base font-semibold text-slate-200">
             {agentLabel(detail.from)}
             <span className="text-slate-500 mx-2">→</span>
@@ -208,7 +208,7 @@ export default function InterventionRecommender({ interventionEdges }) {
                 <div className="text-xs text-slate-500">{inc}</div>
               </div>
             ))}
-            <div className="rounded p-2 text-center bg-slate-700/40 border border-slate-600/30">
+            <div className="rounded p-2 text-center bg-[#0a1628] border border-slate-600/30">
               <div className={`text-lg font-bold ${detail.normal_count === 0 ? 'text-green-400' : 'text-amber-400'}`}>
                 {detail.normal_count}
               </div>

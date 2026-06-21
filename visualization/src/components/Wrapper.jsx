@@ -1,11 +1,12 @@
-export default function SectionWrapper({ id, title, subtitle, children, className = '' }) {
+export default function SectionWrapper({ id, title, subtitle, children, tag }) {
   return (
-    <section id={id} className={`py-12 px-5 ${className}`}>
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-slate-100 mb-1">{title}</h2>
-        {subtitle && <p className="text-slate-400 text-md max-w-screen">{subtitle}</p>}
-        <div className="mt-3 h-px bg-red-700" />
+    <section id={id} className="section-panel">
+      <div className="section-eyebrow">
+        <span className="section-tag">{tag || id.replace('section-', 'SEC-').replace('executive-summary', 'OVERVIEW')}</span>
+        <div className="section-line" />
       </div>
+      <h2 className="section-title">{title}</h2>
+      {subtitle && <p className="section-subtitle">{subtitle}</p>}
       {children}
     </section>
   )

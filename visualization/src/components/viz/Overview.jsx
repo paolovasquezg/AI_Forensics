@@ -5,7 +5,7 @@ import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WIND
 
 const FILTERS = [
   { key: 'all', label: 'All', color: '#64748b' },
-  { key: 'normal', label: 'Normal', color: '#334155' },
+  { key: 'normal', label: 'Normal', color: '#0f1f35' },
   { key: 'HiddenOrca', label: 'HiddenOrca', color: '#f4a261' },
   { key: 'MellowOtter', label: 'MellowOtter', color: '#457b9d' },
   { key: 'SwiftWren', label: 'SwiftWren', color: '#e63946' },
@@ -15,7 +15,7 @@ function baseEdgeColor(edge) {
   if (edge.in_all_incidents) return '#e63946'
   if (edge.incidents_count >= 2) return '#f4a261'
   if (edge.incidents_count === 1) return '#fed7aa'
-  return '#334155'
+  return '#0f1f35'
 }
 
 function edgeMatchesFilter(edge, filter) {
@@ -44,8 +44,8 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     svg.selectAll('*').remove()
 
     const W = wrapRef.current?.offsetWidth || 800
-    const H = 560
-    svg.attr('width', W).attr('height', H)
+    const H = wrapRef.current?.offsetHeight || 560
+    svg.attr('width', W).attr('height', H).attr('viewBox', `0 0 ${W} ${H}`).attr('preserveAspectRatio', 'xMidYMid meet')
 
     const nodeIds = new Set()
     interventionEdges.edges.forEach(e => { nodeIds.add(e.from); nodeIds.add(e.to) })
@@ -116,7 +116,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     nodeEl.append('circle')
       .attr('r', d => 4 + Math.sqrt(d.total || 1) * 1.2)
       .attr('fill', d => DEPT_COLOR(d.dept))
-      .attr('stroke', d => d.is_terminal ? '#e63946' : d.is_c2 ? '#a78bfa' : '#0f172a')
+      .attr('stroke', d => d.is_terminal ? '#e63946' : d.is_c2 ? '#a78bfa' : '#060b14')
       .attr('stroke-width', d => (d.is_terminal || d.is_c2) ? 2.5 : 1)
 
     nodeEl
@@ -152,7 +152,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     if (!linkEl) return
 
     linkEl
-      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#1e293b')
+      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#0a1628')
       .attr('opacity', d => {
         if (!edgeMatchesFilter(d, filter)) return 0.08
         return filter === 'all'
@@ -168,58 +168,39 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
   }, [filter])
 
   return (
-    <div className="space-y-3">
-      {/* Single-select filter */}
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-slate-500 mr-1">Highlight:</span>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 6, minHeight: 0 }}>
+      {/* Filters */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 9, color: '#2d4a6a', fontFamily: 'JetBrains Mono, monospace', marginRight: 2 }}>Filter:</span>
         {FILTERS.map(({ key, label, color }) => (
-          <button
-            key={key}
-            onClick={() => setFilter(key)}
-            className="px-3 py-1 rounded text-xs font-medium border transition-all"
-            style={{
-              background: filter === key ? `${color}25` : 'transparent',
-              borderColor: filter === key ? color : '#1e293b',
-              color: filter === key ? '#f1f5f9' : '#475569'
-            }}
-          >
+          <button key={key} onClick={() => setFilter(key)} className="chip" style={filter === key ? { background: color + '20', borderColor: color + '60', color: '#f1f5f9' } : {}}>
             {label}
           </button>
         ))}
       </div>
 
-      <div ref={wrapRef} className="bg-slate-900/60 rounded-lg border border-slate-700 overflow-hidden">
-        <svg ref={svgRef} className="w-full" />
+      {/* Network SVG — fills remaining space */}
+      <div ref={wrapRef} style={{ flex: 1, minHeight: 0, borderRadius: 6, overflow: 'hidden', border: '1px solid #0d1e34', background: '#060b14' }}>
+        <svg ref={svgRef} style={{ width: '100%', height: '100%', display: 'block' }} />
       </div>
 
-      <div className="flex flex-wrap gap-4 text-xs text-slate-500">
-        <span className="flex items-center gap-1.5">
-          <span className="w-8 h-0.5 bg-slate-600 inline-block" /> Normal
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-8 h-0.5 bg-amber-300 inline-block" /> 1 incident
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-8 h-0.5 bg-orange-400 inline-block" /> 2 incidents
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="w-8 h-0.5 bg-red-500 inline-block" /> All 3 incidents
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 rounded-full border-2 border-red-500 bg-transparent" />
-          John Windward
-        </span>
-        <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 rounded-full border-2 border-purple-400 bg-transparent" />
-          Beacon agent
-        </span>
-      </div>
-      <div className="flex flex-wrap gap-4 text-xs text-slate-500 mt-1">
-        {DEPT_IDS.map(id => (
-          <span key={id} className="flex items-center gap-1.5">
-            <span className="inline-block w-3 h-3 rounded-full" style={{ background: DEPT_COLOR(id) }} />
-            {DEPT_LABELS[id]}
-          </span>
+      {/* Legend */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flexShrink: 0 }}>
+        {[
+          { dash: true, color: '#334155', label: 'Normal' },
+          { dash: true, color: '#fcd34d', label: '1 incident' },
+          { dash: true, color: '#f97316', label: '2 incidents' },
+          { dash: true, color: '#e63946', label: 'All 3' },
+          { ring: true, color: '#e63946', label: 'John W.' },
+          { ring: true, color: '#a78bfa', label: 'C2 agent' },
+          ...DEPT_IDS.map(id => ({ dot: true, color: DEPT_COLOR(id), label: DEPT_LABELS[id] }))
+        ].map((l, i) => (
+          <div key={i} className="legend-item">
+            {l.dot  && <span className="legend-dot" style={{ background: l.color }} />}
+            {l.dash && <span className="legend-dash" style={{ background: l.color }} />}
+            {l.ring && <span className="legend-ring" style={{ color: l.color }} />}
+            {l.label}
+          </div>
         ))}
       </div>
 

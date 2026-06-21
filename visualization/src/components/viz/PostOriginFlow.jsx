@@ -10,7 +10,7 @@ function OriginCard({ step, label, detail, color, icon }) {
         <div className="font-semibold mb-1" style={{ color }}>{icon} {label}</div>
         <div className="text-slate-400 text-xs whitespace-pre-line">{detail}</div>
       </div>
-      <div className="w-px h-5 bg-slate-700 mt-0.5" />
+      <div className="w-px h-5 bg-[#0d1829] mt-0.5" />
     </div>
   )
 }
@@ -77,9 +77,9 @@ export default function PostOriginFlow({ chains, posts }) {
     g.append('g').attr('transform', `translate(0,${iH})`)
       .call(d3.axisBottom(xScale).ticks(6).tickFormat(d3.timeFormat('%b %d')))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#334155')
+        ax.select('.domain').attr('stroke', '#0f1f35')
         ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 10)
-        ax.selectAll('line').attr('stroke', '#334155')
+        ax.selectAll('line').attr('stroke', '#0f1f35')
       })
 
     // Normal posts
@@ -124,7 +124,7 @@ export default function PostOriginFlow({ chains, posts }) {
       .attr('cy', iH / 2)
       .attr('r', 9)
       .attr('fill', d => INCIDENT_COLOR[d.incident])
-      .attr('stroke', '#0f172a').attr('stroke-width', 2)
+      .attr('stroke', '#060b14').attr('stroke-width', 2)
       .style('cursor', 'pointer')
       .on('mousemove', (event, d) => {
         setTooltip({
@@ -157,7 +157,7 @@ export default function PostOriginFlow({ chains, posts }) {
   return (
     <div className="space-y-6">
       {/* Timeline scatter */}
-      <div className="bg-slate-900/60 rounded-lg border border-slate-700 p-4">
+      <div className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4">
         <div className="text-base font-semibold text-slate-300 mb-4">
           SaidIT posts - {posts.posts.length} total and 3 anomalous
         </div>
@@ -177,12 +177,12 @@ export default function PostOriginFlow({ chains, posts }) {
       </div>
 
       {/* Key insight */}
-      <div className="bg-slate-800/60 border border-red-900/30 rounded-lg p-4 text-sm text-slate-400 text-center">
-        All 3 anomalous posts have <code className="text-slate-300 bg-slate-700 px-1 rounded">content: null</code> — their
-        content comes from external <code className="text-slate-300 bg-slate-700 px-1 rounded">.txt</code> files
+      <div className="bg-[#090f1c]/60 border border-red-900/30 rounded-lg p-4 text-sm text-slate-400 text-center">
+        All 3 anomalous posts have <code className="text-slate-300 bg-[#0d1829] px-1 rounded">content: null</code> — their
+        content comes from external <code className="text-slate-300 bg-[#0d1829] px-1 rounded">.txt</code> files
         and propagated via the worm. All are posted by
-        <code className="text-slate-300 bg-slate-700 px-1 rounded mx-1">john_windward</code>
-        to <code className="text-slate-300 bg-slate-700 px-1 rounded">SaidIT/general</code>.
+        <code className="text-slate-300 bg-[#0d1829] px-1 rounded mx-1">john_windward</code>
+        to <code className="text-slate-300 bg-[#0d1829] px-1 rounded">SaidIT/general</code>.
       </div>
 
       {tooltip && <Tooltip x={tooltip.x} y={tooltip.y}>{tooltip.children}</Tooltip>}

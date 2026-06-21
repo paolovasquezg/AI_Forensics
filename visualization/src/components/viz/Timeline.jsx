@@ -28,7 +28,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
 
     // Background grid
     g.append('rect').attr('width', iW).attr('height', iH)
-      .attr('fill', 'rgba(15,23,42,0.4)').attr('rx', 4)
+      .attr('fill', 'rgba(6,11,20,0.6)').attr('rx', 4)
 
     const allTimes = incident.hops.map(h => new Date(h.datetime))
     if (incident.create_event) allTimes.push(new Date(incident.create_event.datetime))
@@ -52,13 +52,13 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
 
     g.append('g').attr('transform', `translate(0,${iH})`)
       .call(xAxis)
-      .call(ax => ax.select('.domain').attr('stroke', '#334155'))
-      .call(ax => ax.selectAll('line').attr('stroke', '#1e293b'))
+      .call(ax => ax.select('.domain').attr('stroke', '#0f1f35'))
+      .call(ax => ax.selectAll('line').attr('stroke', '#060e1c'))
       .call(ax => ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 11))
 
     g.append('g').call(yAxis)
-      .call(ax => ax.select('.domain').attr('stroke', '#334155'))
-      .call(ax => ax.selectAll('line').attr('stroke', '#1e293b'))
+      .call(ax => ax.select('.domain').attr('stroke', '#0f1f35'))
+      .call(ax => ax.selectAll('line').attr('stroke', '#060e1c'))
       .call(ax => ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 10))
 
     // Horizontal grid lines
@@ -67,7 +67,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       .join('line')
       .attr('x1', 0).attr('x2', iW)
       .attr('y1', d => yScale(d)).attr('y2', d => yScale(d))
-      .attr('stroke', '#1e293b').attr('stroke-dasharray', '3,3')
+      .attr('stroke', '#060e1c').attr('stroke-dasharray', '3,3')
 
     // Agent color scale
     const uniqueAgents = [...new Set(incident.hops.map(h => h.from))]
@@ -97,7 +97,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       .attr('cy', d => yScale(d.depth))
       .attr('r', 5)
       .attr('fill', d => agentColors(d.from))
-      .attr('stroke', '#0f172a')
+      .attr('stroke', '#060b14')
       .attr('stroke-width', 1)
       .attr('opacity', 0.85)
       .style('cursor', 'pointer')
@@ -124,7 +124,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       g.append('polygon')
         .attr('points', `${cx},${cy - 9} ${cx + 8},${cy + 5} ${cx - 8},${cy + 5}`)
         .attr('fill', '#22c55e')
-        .attr('stroke', '#0f172a').attr('stroke-width', 1.5)
+        .attr('stroke', '#060b14').attr('stroke-width', 1.5)
       g.append('text')
         .attr('x', cx + 10).attr('y', cy + 2)
         .attr('fill', '#22c55e').attr('font-size', 10)
@@ -135,7 +135,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       const px = xScale(new Date(incident.post_event.datetime))
       const py = yScale(maxDepth + 0.8)
       g.append('circle').attr('cx', px).attr('cy', py).attr('r', 9)
-        .attr('fill', '#e63946').attr('stroke', '#0f172a').attr('stroke-width', 2)
+        .attr('fill', '#e63946').attr('stroke', '#060b14').attr('stroke-width', 2)
       g.append('text').attr('x', px + 12).attr('y', py + 4)
         .attr('fill', '#e63946').attr('font-size', 10).text('POST')
 
@@ -187,7 +187,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
             className="px-4 py-1.5 rounded text-xs font-semibold transition-all border"
             style={{
               background: selectedIncident === n ? `${INCIDENT_COLOR[n]}20` : 'transparent',
-              borderColor: selectedIncident === n ? INCIDENT_COLOR[n] : '#334155',
+              borderColor: selectedIncident === n ? INCIDENT_COLOR[n] : '#0f1f35',
               color: selectedIncident === n ? '#f1f5f9' : '#64748b'
             }}
           >
@@ -197,13 +197,13 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       </div>
 
       <div className="flex gap-4">
-        <div ref={wrapRef} className="flex-1 bg-slate-900/60 rounded-lg border border-slate-700 p-2 overflow-x-auto">
+        <div ref={wrapRef} className="flex-1 bg-slate-900/40 rounded-lg border border-slate-800/60 p-2 overflow-x-auto">
           <svg ref={svgRef} />
         </div>
 
         {incident && (
           <div className="w-52 shrink-0 space-y-3">
-            <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+            <div className="bg-slate-900/80 border border-slate-800/60 rounded-lg p-4">
               <div className="text-base text-slate-400 uppercase tracking-wide mb-3">Stats</div>
               {[
                 ['Hops', incident.hop_count],
@@ -220,7 +220,7 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
               ))}
             </div>
 
-            <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+            <div className="bg-slate-900/80 border border-slate-800/60 rounded-lg p-4">
               <div className="text-base text-slate-400 uppercase tracking-wide mb-2">Agents</div>
               <div className="space-y-1 max-h-81 overflow-y-auto">
                 {incident.agents_involved.map(a => (

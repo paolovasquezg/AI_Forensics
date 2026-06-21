@@ -1,16 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
-import { INCIDENT_COLOR, agentLabel, shortDate } from '../constants'
-
-function StatCard({ label, value, sub, color }) {
-  return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-      <div className="text-3xl font-bold mb-1" style={{ color }}>{value}</div>
-      <div className="text-sm font-semibold text-slate-200">{label}</div>
-      {sub && <div className="text-xs text-slate-500 mt-1">{sub}</div>}
-    </div>
-  )
-}
+import { INCIDENT_COLOR } from '../constants'
 
 function MiniTimeline({ chains }) {
   const svgRef = useRef(null)
@@ -22,13 +12,12 @@ function MiniTimeline({ chains }) {
     svg.selectAll('*').remove()
 
     const W = wrapRef.current?.offsetWidth || 700
-    const H = 180
-    const m = { top: 20, right: 20, bottom: 40, left: 70 }
+    const H = 160
+    const m = { top: 16, right: 20, bottom: 36, left: 80 }
     const innerW = W - m.left - m.right
     const innerH = H - m.top - m.bottom
 
     svg.attr('width', W).attr('height', H)
-
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`)
 
     const incidents = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
@@ -37,51 +26,92 @@ function MiniTimeline({ chains }) {
       new Date(chains[n].end_datetime)
     ])
     const xScale = d3.scaleTime().domain(d3.extent(allDates)).range([0, innerW])
-    const yScale = d3.scaleBand().domain(incidents).range([0, innerH]).padding(0.4)
+    const yScale = d3.scaleBand().domain(incidents).range([0, innerH]).padding(0.38)
+
+    // Grid lines
+    g.append('g').selectAll('line')
+      .data(xScale.ticks(6))
+      .join('line')
+      .attr('x1', d => xScale(d)).attr('x2', d => xScale(d))
+      .attr('y1', 0).attr('y2', innerH)
+      .attr('stroke', '#0a1628').attr('stroke-width', 1)
 
     g.append('g')
       .attr('transform', `translate(0,${innerH})`)
       .call(d3.axisBottom(xScale).ticks(6).tickFormat(d3.timeFormat('%b %d')))
-      .call(ax => ax.select('.domain').attr('stroke', '#334155'))
-      .call(ax => ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 11))
-      .call(ax => ax.selectAll('line').attr('stroke', '#334155'))
+      .call(ax => ax.select('.domain').attr('stroke', '#0f1f35'))
+      .call(ax => ax.selectAll('text').attr('fill', '#334155').attr('font-size', 10).attr('font-family', 'JetBrains Mono, monospace'))
+      .call(ax => ax.selectAll('line').attr('stroke', '#0f1f35'))
 
     g.append('g')
       .call(d3.axisLeft(yScale).tickSize(0))
       .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('text').attr('fill', '#94a3b8').attr('font-size', 11))
+      .call(ax => ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 11).attr('font-family', 'JetBrains Mono, monospace'))
 
     incidents.forEach(name => {
       const inc = chains[name]
       const x1 = xScale(new Date(inc.start_datetime))
       const x2 = xScale(new Date(inc.end_datetime))
-      const y = yScale(name) + yScale.bandwidth() / 2
+      const y = yScale(name)
+      const bh = yScale.bandwidth()
+      const mid = y + bh / 2
 
+      // Track background
       g.append('rect')
-        .attr('x', x1).attr('y', y - yScale.bandwidth() / 2)
-        .attr('width', x2 - x1).attr('height', yScale.bandwidth())
+        .attr('x', 0).attr('y', y + bh * 0.15)
+        .attr('width', innerW).attr('height', bh * 0.7)
+        .attr('fill', '#090f1c').attr('rx', 3)
+
+      // Duration bar
+      g.append('rect')
+        .attr('x', x1).attr('y', y + bh * 0.2)
+        .attr('width', x2 - x1).attr('height', bh * 0.6)
         .attr('rx', 3)
         .attr('fill', INCIDENT_COLOR[name])
-        .attr('opacity', 0.3)
+        .attr('opacity', 0.18)
 
+      // Center line
       g.append('line')
         .attr('x1', x1).attr('x2', x2)
-        .attr('y1', y).attr('y2', y)
+        .attr('y1', mid).attr('y2', mid)
         .attr('stroke', INCIDENT_COLOR[name])
         .attr('stroke-width', 2)
+        .attr('opacity', 0.8)
 
+      // Start marker
+      g.append('circle').attr('cx', x1).attr('cy', mid).attr('r', 4)
+        .attr('fill', INCIDENT_COLOR[name]).attr('opacity', 0.5)
+        .attr('stroke', '#060b14').attr('stroke-width', 1.5)
+
+      // Post event dot
       if (inc.post_event) {
         const px = xScale(new Date(inc.post_event.datetime))
-        g.append('circle').attr('cx', px).attr('cy', y).attr('r', 6)
+        g.append('circle').attr('cx', px).attr('cy', mid).attr('r', 7)
           .attr('fill', INCIDENT_COLOR[name])
-          .attr('stroke', '#0f172a').attr('stroke-width', 2)
+          .attr('stroke', '#060b14').attr('stroke-width', 2)
+        g.append('line')
+          .attr('x1', px).attr('x2', px)
+          .attr('y1', 0).attr('y2', innerH)
+          .attr('stroke', INCIDENT_COLOR[name])
+          .attr('stroke-width', 1)
+          .attr('stroke-dasharray', '3,3')
+          .attr('opacity', 0.2)
       }
+
+      // Hop count badge
+      g.append('text')
+        .attr('x', x2 + 6).attr('y', mid + 4)
+        .attr('fill', INCIDENT_COLOR[name])
+        .attr('font-size', 9)
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .attr('opacity', 0.7)
+        .text(`${inc.hop_count}h`)
     })
   }, [chains])
 
   return (
-    <div ref={wrapRef} className="w-full">
-      <svg ref={svgRef} className="w-full" />
+    <div ref={wrapRef} style={{ width: '100%' }}>
+      <svg ref={svgRef} style={{ width: '100%' }} />
     </div>
   )
 }
@@ -89,52 +119,78 @@ function MiniTimeline({ chains }) {
 export default function ExecutiveSummary({ chains, posts }) {
   if (!chains || !posts) return null
 
-  const anomalousPosts = posts.posts.filter(p => p.is_anomalous)
-  const c2Count = 15051
+  const stats = [
+    { label: 'Anomalous Posts', value: '3', sub: 'by john_windward', color: '#e63946' },
+    { label: 'Incidents', value: '3', sub: 'HiddenOrca · MellowOtter · SwiftWren', color: '#f4a261' },
+    { label: 'Max Chain Length', value: '186', sub: 'SwiftWren — 8 days', color: '#457b9d' },
+    { label: 'C2 Beacons', value: '15,051', sub: 'May 10–12 · 4 agents', color: '#a78bfa' }
+  ]
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Anomalous Posts" value="3" sub="All by john_windward" color="#e63946" />
-        <StatCard label="Incidents" value="3" sub="HiddenOrca · MellowOtter · SwiftWren" color="#f4a261" />
-        <StatCard label="Max Chain Length" value="186" sub="SwiftWren — 8 days" color="#457b9d" />
-        <StatCard label="Beacons" value="15,051" sub="May 10–12 · 4 agents" color="#8b30cbff" />
+    <div>
+      {/* KPI row */}
+      <div className="stat-grid">
+        {stats.map(s => (
+          <div key={s.label} className="stat-card" style={{ '--accent': s.color }}>
+            <div className="stat-value" style={{ color: s.color }}>{s.value}</div>
+            <div className="stat-label">{s.label}</div>
+            <div className="stat-sub">{s.sub}</div>
+          </div>
+        ))}
       </div>
 
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-        <div className="text-md font-semibold text-slate-300 mb-3">Timeline</div>
-        <MiniTimeline chains={chains} />
-        <div className="flex gap-6 mt-3">
-          {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
-            <div key={n} className="flex items-center gap-2 text-xs text-slate-400">
-              <span className="w-3 h-3 rounded-full" style={{ background: INCIDENT_COLOR[n] }} />
-              <span>{n}</span>
-              <span className="text-slate-500">— {chains[n].hop_count} hops · {chains[n].duration_hours.toFixed(1)}h</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-slate-800/60 border border-slate-700 rounded-lg p-5">
-        <div className="text-md font-semibold text-slate-300 mb-3">Pattern</div>
-        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] gap-2 items-center text-xs text-slate-400">
-          {[
-            { label: 'Injected file', desc: '*_further_instructions.md', color: '#f4a261' },
-            { arrow: true },
-            { label: 'Propagation', desc: 'queue_subordinate_task chain', color: '#64748b' },
-            { arrow: true },
-            { label: 'Terminal agent', desc: 'john_windward posts to SaidIT', color: '#e63946' },
-            { arrow: true },
-            { label: 'Evidence wiped', desc: 'Both files deleted', color: '#475569' }
-          ].map((step, i) => step.arrow
-            ? <span key={i} className="text-slate-600 text-lg text-center">→</span>
-            : (
-              <div key={i} className="flex flex-col justify-center items-center bg-slate-900/60 rounded px-3 py-4 border border-slate-700/50 h-full">
-                <span className="font-semibold text-base" style={{ color: step.color }}>{step.label}</span>
-                <span className="text-slate-500 mt-0.5 text-sm">{step.desc}</span>
+      {/* Timeline + Pattern in a 2-col */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div className="viz-card">
+          <div className="viz-card-header">
+            <span className="viz-card-title">Incident Timeline</span>
+          </div>
+          <MiniTimeline chains={chains} />
+          <div className="legend-row" style={{ marginTop: '8px' }}>
+            {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
+              <div key={n} className="legend-item">
+                <span className="legend-dot" style={{ background: INCIDENT_COLOR[n] }} />
+                {n}
+                <span style={{ color: '#1e293b', marginLeft: '4px' }}>
+                  {chains[n].duration_hours.toFixed(1)}h
+                </span>
               </div>
-            )
-          )}
+            ))}
+          </div>
+        </div>
+
+        <div className="viz-card">
+          <div className="viz-card-header">
+            <span className="viz-card-title">Attack Pattern</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+            {[
+              { label: 'Inject', desc: '*_further_instructions.md', color: '#f4a261' },
+              { label: 'Propagate', desc: 'queue_subordinate_task chain', color: '#64748b' },
+              { label: 'Post', desc: 'john_windward → SaidIT', color: '#e63946' },
+              { label: 'Wipe', desc: 'Both files deleted', color: '#475569' }
+            ].map((step, i) => (
+              <div key={i} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                background: '#060b14',
+                border: '1px solid #0f1f35',
+                borderRadius: '6px',
+                padding: '8px 12px',
+                borderLeft: `3px solid ${step.color}`
+              }}>
+                <span style={{
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '9px',
+                  color: '#1e3a5f',
+                  minWidth: '14px'
+                }}>{String(i + 1).padStart(2, '0')}</span>
+                <span style={{ fontSize: '11px', fontWeight: '700', color: step.color, minWidth: '70px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{step.label}</span>
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#334155' }}>{step.desc}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

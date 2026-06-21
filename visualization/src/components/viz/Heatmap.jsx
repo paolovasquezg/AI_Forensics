@@ -169,8 +169,8 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
             onClick={() => setEventFilter(t)}
             className="px-2.5 py-1 rounded text-xs border transition-all"
             style={{
-              background: eventFilter === t ? '#334155' : 'transparent',
-              borderColor: eventFilter === t ? '#64748b' : '#1e293b',
+              background: eventFilter === t ? '#0f1f35' : 'transparent',
+              borderColor: eventFilter === t ? '#64748b' : '#0a1628',
               color: eventFilter === t ? '#f1f5f9' : '#64748b'
             }}
           >
@@ -179,7 +179,7 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
         ))}
       </div>
 
-      <div ref={wrapRef} className="bg-slate-900/60 rounded-lg border border-slate-700 p-4 overflow-auto max-h-[600px]">
+      <div ref={wrapRef} className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4 overflow-auto max-h-[600px]">
         <svg ref={svgRef} />
       </div>
 
