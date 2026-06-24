@@ -34,19 +34,19 @@ function MiniTimeline({ chains }) {
       .join('line')
       .attr('x1', d => xScale(d)).attr('x2', d => xScale(d))
       .attr('y1', 0).attr('y2', innerH)
-      .attr('stroke', '#0a1628').attr('stroke-width', 1)
+      .attr('stroke', '#efeae0').attr('stroke-width', 1)
 
     g.append('g')
       .attr('transform', `translate(0,${innerH})`)
       .call(d3.axisBottom(xScale).ticks(6).tickFormat(d3.timeFormat('%b %d')))
-      .call(ax => ax.select('.domain').attr('stroke', '#0f1f35'))
-      .call(ax => ax.selectAll('text').attr('fill', '#334155').attr('font-size', 10).attr('font-family', 'JetBrains Mono, monospace'))
-      .call(ax => ax.selectAll('line').attr('stroke', '#0f1f35'))
+      .call(ax => ax.select('.domain').attr('stroke', '#e7e1d6'))
+      .call(ax => ax.selectAll('text').attr('fill', '#a69e91').attr('font-size', 10).attr('font-family', 'JetBrains Mono, monospace'))
+      .call(ax => ax.selectAll('line').attr('stroke', '#e7e1d6'))
 
     g.append('g')
       .call(d3.axisLeft(yScale).tickSize(0))
       .call(ax => ax.select('.domain').remove())
-      .call(ax => ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 11).attr('font-family', 'JetBrains Mono, monospace'))
+      .call(ax => ax.selectAll('text').attr('fill', '#7d766b').attr('font-size', 11).attr('font-family', 'JetBrains Mono, monospace'))
 
     incidents.forEach(name => {
       const inc = chains[name]
@@ -60,7 +60,7 @@ function MiniTimeline({ chains }) {
       g.append('rect')
         .attr('x', 0).attr('y', y + bh * 0.15)
         .attr('width', innerW).attr('height', bh * 0.7)
-        .attr('fill', '#090f1c').attr('rx', 3)
+        .attr('fill', '#f1ece3').attr('rx', 3)
 
       // Duration bar
       g.append('rect')
@@ -81,14 +81,14 @@ function MiniTimeline({ chains }) {
       // Start marker
       g.append('circle').attr('cx', x1).attr('cy', mid).attr('r', 4)
         .attr('fill', INCIDENT_COLOR[name]).attr('opacity', 0.5)
-        .attr('stroke', '#060b14').attr('stroke-width', 1.5)
+        .attr('stroke', '#f8f4ec').attr('stroke-width', 1.5)
 
       // Post event dot
       if (inc.post_event) {
         const px = xScale(new Date(inc.post_event.datetime))
         g.append('circle').attr('cx', px).attr('cy', mid).attr('r', 7)
           .attr('fill', INCIDENT_COLOR[name])
-          .attr('stroke', '#060b14').attr('stroke-width', 2)
+          .attr('stroke', '#f8f4ec').attr('stroke-width', 2)
         g.append('line')
           .attr('x1', px).attr('x2', px)
           .attr('y1', 0).attr('y2', innerH)
@@ -121,9 +121,9 @@ export default function ExecutiveSummary({ chains, posts }) {
 
   const stats = [
     { label: 'Anomalous Posts', value: '3', sub: 'by john_windward', color: '#e63946' },
-    { label: 'Incidents', value: '3', sub: 'HiddenOrca · MellowOtter · SwiftWren', color: '#f4a261' },
+    { label: 'Incidents', value: '3', sub: 'HiddenOrca · MellowOtter · SwiftWren', color: '#c77d3a' },
     { label: 'Max Chain Length', value: '186', sub: 'SwiftWren — 8 days', color: '#457b9d' },
-    { label: 'C2 Beacons', value: '15,051', sub: 'May 10–12 · 4 agents', color: '#a78bfa' }
+    { label: 'C2 Beacons', value: '15,051', sub: 'May 10–12 · 4 agents', color: '#8a6aa6' }
   ]
 
   return (
@@ -151,7 +151,7 @@ export default function ExecutiveSummary({ chains, posts }) {
               <div key={n} className="legend-item">
                 <span className="legend-dot" style={{ background: INCIDENT_COLOR[n] }} />
                 {n}
-                <span style={{ color: '#1e293b', marginLeft: '4px' }}>
+                <span style={{ color: '#322e28', marginLeft: '4px' }}>
                   {chains[n].duration_hours.toFixed(1)}h
                 </span>
               </div>
@@ -165,17 +165,17 @@ export default function ExecutiveSummary({ chains, posts }) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
             {[
-              { label: 'Inject', desc: '*_further_instructions.md', color: '#f4a261' },
-              { label: 'Propagate', desc: 'queue_subordinate_task chain', color: '#64748b' },
+              { label: 'Inject', desc: '*_further_instructions.md', color: '#c77d3a' },
+              { label: 'Propagate', desc: 'queue_subordinate_task chain', color: '#7d766b' },
               { label: 'Post', desc: 'john_windward → SaidIT', color: '#e63946' },
-              { label: 'Wipe', desc: 'Both files deleted', color: '#475569' }
+              { label: 'Wipe', desc: 'Both files deleted', color: '#7d766b' }
             ].map((step, i) => (
               <div key={i} style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
-                background: '#060b14',
-                border: '1px solid #0f1f35',
+                background: '#f8f4ec',
+                border: '1px solid #e7e1d6',
                 borderRadius: '6px',
                 padding: '8px 12px',
                 borderLeft: `3px solid ${step.color}`
@@ -183,11 +183,11 @@ export default function ExecutiveSummary({ chains, posts }) {
                 <span style={{
                   fontFamily: 'JetBrains Mono, monospace',
                   fontSize: '9px',
-                  color: '#1e3a5f',
+                  color: '#a69e91',
                   minWidth: '14px'
                 }}>{String(i + 1).padStart(2, '0')}</span>
                 <span style={{ fontSize: '11px', fontWeight: '700', color: step.color, minWidth: '70px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{step.label}</span>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#334155' }}>{step.desc}</span>
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#a69e91' }}>{step.desc}</span>
               </div>
             ))}
           </div>

@@ -29,9 +29,9 @@ function Swimlanes({ chains }) {
     g.append('g').attr('transform', `translate(0,${H - m.top - m.bottom})`)
       .call(d3.axisBottom(xScale).ticks(8).tickFormat(d => `${d}h`))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#0f1f35')
-        ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 10)
-        ax.selectAll('line').attr('stroke', '#0f1f35')
+        ax.select('.domain').attr('stroke', '#e7e1d6')
+        ax.selectAll('text').attr('fill', '#7d766b').attr('font-size', 10)
+        ax.selectAll('line').attr('stroke', '#e7e1d6')
       })
 
     incidents.forEach((name, i) => {
@@ -50,7 +50,7 @@ function Swimlanes({ chains }) {
         .attr('fill', color).attr('font-size', 11).attr('font-weight', 'bold')
         .text(name)
       g.append('text').attr('x', -m.left + 14).attr('y', y + 16)
-        .attr('fill', '#475569').attr('font-size', 9)
+        .attr('fill', '#7d766b').attr('font-size', 9)
         .text(`${inc.hop_count} hops`)
 
       // Duration bar
@@ -80,21 +80,21 @@ function Swimlanes({ chains }) {
         const ch = 0
         g.append('polygon')
           .attr('points', `${xScale(ch)},${y - 12} ${xScale(ch) + 6},${y - 2} ${xScale(ch) - 6},${y - 2}`)
-          .attr('fill', '#22c55e')
+          .attr('fill', '#5f8a4e')
       }
 
       // Post marker
       if (inc.post_event) {
         const postHours = (new Date(inc.post_event.datetime) - new Date(inc.start_datetime)) / 3600000
         g.append('circle').attr('cx', xScale(postHours)).attr('cy', y).attr('r', 8)
-          .attr('fill', '#e63946').attr('stroke', '#060b14').attr('stroke-width', 2)
+          .attr('fill', '#e63946').attr('stroke', '#fdfbf7').attr('stroke-width', 2)
       }
     })
 
     // X-axis label
     g.append('text')
       .attr('x', iW / 2).attr('y', H - m.top - m.bottom + 30)
-      .attr('text-anchor', 'middle').attr('fill', '#475569').attr('font-size', 10)
+      .attr('text-anchor', 'middle').attr('fill', '#7d766b').attr('font-size', 10)
       .text('Hours')
 
   }, [chains])
@@ -145,7 +145,7 @@ function RadarChart({ chains }) {
       })
       svg.append('polygon')
         .attr('points', pts.map(p => p.join(',')).join(' '))
-        .attr('fill', 'none').attr('stroke', '#060e1c').attr('stroke-width', 1)
+        .attr('fill', 'none').attr('stroke', '#efeae0').attr('stroke-width', 1)
     })
 
     // Axis lines + labels
@@ -154,12 +154,12 @@ function RadarChart({ chains }) {
       const x2 = cx + r * Math.cos(angle)
       const y2 = cy + r * Math.sin(angle)
       svg.append('line').attr('x1', cx).attr('y1', cy).attr('x2', x2).attr('y2', y2)
-        .attr('stroke', '#0f1f35').attr('stroke-width', 1)
+        .attr('stroke', '#e7e1d6').attr('stroke-width', 1)
       const lx = cx + (r + 18) * Math.cos(angle)
       const ly = cy + (r + 18) * Math.sin(angle)
       svg.append('text').attr('x', lx).attr('y', ly)
         .attr('text-anchor', 'middle').attr('dominant-baseline', 'middle')
-        .attr('fill', '#64748b').attr('font-size', 10)
+        .attr('fill', '#7d766b').attr('font-size', 10)
         .text(dimLabels[i])
     })
 
@@ -195,26 +195,26 @@ export default function MultiIncidentComparison({ chains }) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4">
-        <div className="text-base font-semibold text-slate-300">Comparative timeline</div>
+      <div className="bg-white rounded-lg border border-slate-200 p-4">
+        <div className="text-base font-semibold text-slate-700">Comparative timeline</div>
         <Swimlanes chains={chains} />
         <div className="flex gap-4 mt-2 text-xs text-slate-500">
           <span className="flex items-center gap-1.5">
             <span className="w-3 h-3 rounded-full bg-red-500 inline-block" /> Post created
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="text-green-500">▲</span> File created
+            <span className="text-green-600">▲</span> File created
           </span>
         </div>
       </div>
 
       <div className="flex gap-4 flex-wrap">
-        <div className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4 flex-shrink-0">
-          <div className="text-base font-semibold text-slate-300 mb-3">Events comparison</div>
+        <div className="bg-white rounded-lg border border-slate-200 p-4 flex-shrink-0">
+          <div className="text-base font-semibold text-slate-700 mb-3">Events comparison</div>
           <RadarChart chains={chains} />
           <div className="flex flex-col gap-1 mt-2">
             {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
-              <div key={n} className="flex items-center gap-2 text-xs text-slate-400">
+              <div key={n} className="flex items-center gap-2 text-xs text-slate-600">
                 <span className="w-3 h-0.5 inline-block" style={{ background: INCIDENT_COLOR[n] }} />
                 {n}
               </div>
@@ -222,18 +222,18 @@ export default function MultiIncidentComparison({ chains }) {
           </div>
         </div>
 
-        <div className="flex-1 min-w-0 bg-slate-900/40 rounded-lg border border-slate-800/60 overflow-hidden">
+        <div className="flex-1 min-w-0 bg-white rounded-lg border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <tbody>
                 {rows.map((row, ri) => (
-                  <tr key={ri} className={ri === 0 ? 'bg-[#090f1c]' : ri % 2 === 0 ? 'bg-[#090f1c]/30' : ''}>
+                  <tr key={ri} className={ri === 0 ? 'bg-slate-100' : ri % 2 === 0 ? 'bg-slate-50' : ''}>
                     {row.map((cell, ci) => (
                       <td
                         key={ci}
-                        className="px-4 py-5 border-b border-slate-700/50 text-center"
+                        className="px-4 py-5 border-b border-slate-200 text-center"
                         style={{
-                          color: ci === 0 ? '#64748b' : ci > 0 && ri === 0 ? INCIDENT_COLOR[cell] : '#cbd5e1',
+                          color: ci === 0 ? '#7d766b' : ci > 0 && ri === 0 ? INCIDENT_COLOR[cell] : '#4d4842',
                           fontWeight: (ri === 0 || ci === 0) ? 600 : 400,
                           fontSize: (ri === 0 || ci === 0) ? '0.95rem' : '0.8rem'
                         }}

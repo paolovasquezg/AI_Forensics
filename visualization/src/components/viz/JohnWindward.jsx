@@ -56,21 +56,21 @@ export default function JohnWindwardProfile({ agentMetrics }) {
       .join('line')
       .attr('x1', d => xScale(d)).attr('x2', d => xScale(d))
       .attr('y1', 0).attr('y2', iH)
-      .attr('stroke', '#0a1628').attr('stroke-width', 1)
+      .attr('stroke', '#efeae0').attr('stroke-width', 1)
 
     // axes
     g.append('g').attr('transform', `translate(0,${iH})`)
       .call(d3.axisBottom(xScale).ticks(4))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#0d1e34')
-        ax.selectAll('text').attr('fill', '#2d4a6a').attr('font-size', 9)
-        ax.selectAll('line').attr('stroke', '#0d1e34')
+        ax.select('.domain').attr('stroke', '#e7e1d6')
+        ax.selectAll('text').attr('fill', '#a69e91').attr('font-size', 9)
+        ax.selectAll('line').attr('stroke', '#e7e1d6')
       })
 
     g.append('g').call(d3.axisLeft(yScale).tickSize(0))
       .call(ax => {
         ax.select('.domain').remove()
-        ax.selectAll('text').attr('fill', '#4a7098').attr('font-size', 9)
+        ax.selectAll('text').attr('fill', '#7d766b').attr('font-size', 9)
       })
 
     const row = g.selectAll('.row').data(metrics).join('g').attr('class', 'row')
@@ -80,12 +80,12 @@ export default function JohnWindwardProfile({ agentMetrics }) {
       .attr('y',      d => (yScale(d.label) || 0) + yScale.bandwidth() * 0.46)
       .attr('height', yScale.bandwidth() * 0.44)
       .attr('width',  d => xScale(d.avg))
-      .attr('fill', '#0d2040').attr('rx', 2)
+      .attr('fill', '#e8e1d4').attr('rx', 2)
 
     row.append('text')
       .attr('x', d => xScale(d.avg) + 5)
       .attr('y', d => (yScale(d.label) || 0) + yScale.bandwidth() * 0.72 + 3)
-      .attr('fill', '#2d4a6a').attr('font-size', 8)
+      .attr('fill', '#a69e91').attr('font-size', 8)
       .text(d => `avg ${d.avg.toFixed(1)}`)
 
     // JW bar (front)
@@ -99,7 +99,7 @@ export default function JohnWindwardProfile({ agentMetrics }) {
     row.append('text')
       .attr('x', d => xScale(d.jw) + 5)
       .attr('y', d => (yScale(d.label) || 0) + yScale.bandwidth() * 0.31)
-      .attr('fill', '#cbd5e1').attr('font-size', 9).attr('font-weight', 'bold')
+      .attr('fill', '#4d4842').attr('font-size', 9).attr('font-weight', 'bold')
       .text(d => d.jw)
 
     // mouseover on whole row
@@ -109,9 +109,9 @@ export default function JohnWindwardProfile({ agentMetrics }) {
           x: event.clientX, y: event.clientY,
           children: (
             <div>
-              <div style={{ fontWeight: 600, fontSize: 11, color: '#e2e8f0', marginBottom: 4 }}>{d.label}</div>
-              <div style={{ fontSize: 10, color: '#457b9d' }}>John Windward: <b style={{ color: '#e2e8f0' }}>{d.jw}</b></div>
-              <div style={{ fontSize: 10, color: '#475569' }}>System avg: {d.avg.toFixed(1)}</div>
+              <div style={{ fontWeight: 600, fontSize: 11, color: '#2b2823', marginBottom: 4 }}>{d.label}</div>
+              <div style={{ fontSize: 10, color: '#457b9d' }}>John Windward: <b style={{ color: '#2b2823' }}>{d.jw}</b></div>
+              <div style={{ fontSize: 10, color: '#7d766b' }}>System avg: {d.avg.toFixed(1)}</div>
             </div>
           )
         })
@@ -131,14 +131,14 @@ export default function JohnWindwardProfile({ agentMetrics }) {
     return () => ro.disconnect()
   }, [drawChart])
 
-  if (!jw) return <div style={{ color: '#475569', fontSize: 12 }}>Loading…</div>
+  if (!jw) return <div style={{ color: '#7d766b', fontSize: 12 }}>Loading…</div>
 
   const stats = [
     { key: 'Dept',        val: 'Customer Support',              color: '#e76f51' },
-    { key: 'Sent',        val: jw.sent_normal,                  color: '#94a3b8' },
-    { key: 'Recv',        val: jw.recv_normal,                  color: '#94a3b8' },
+    { key: 'Sent',        val: jw.sent_normal,                  color: '#4d4842' },
+    { key: 'Recv',        val: jw.recv_normal,                  color: '#4d4842' },
     { key: 'Anom. recv',  val: jw.anomaly_recv_total,           color: '#e63946' },
-    { key: 'Incidents',   val: jw.incidents_involved?.join(', '), color: '#f4a261' },
+    { key: 'Incidents',   val: jw.incidents_involved?.join(', '), color: '#c77d3a' },
   ]
 
   return (
@@ -147,7 +147,7 @@ export default function JohnWindwardProfile({ agentMetrics }) {
       {/* ── Profile card ── */}
       <div style={{
         flexShrink: 0,
-        background: 'linear-gradient(135deg, #07101e 0%, #0a1628 100%)',
+        background: 'linear-gradient(135deg, #fdfbf7 0%, #efeae0 100%)',
         border: '1px solid rgba(230,57,70,0.20)',
         borderRadius: 10,
         overflow: 'hidden',
@@ -169,8 +169,8 @@ export default function JohnWindwardProfile({ agentMetrics }) {
 
             {/* Name + role */}
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 800, fontSize: 14, color: '#e2e8f0', letterSpacing: '-0.01em' }}>John Windward</div>
-              <div style={{ fontSize: 10, color: '#475569', marginTop: 1 }}>Customer Support Lead</div>
+              <div style={{ fontWeight: 800, fontSize: 14, color: '#2b2823', letterSpacing: '-0.01em' }}>John Windward</div>
+              <div style={{ fontSize: 10, color: '#7d766b', marginTop: 1 }}>Customer Support Lead</div>
             </div>
 
             {/* Threat badge */}
@@ -182,7 +182,7 @@ export default function JohnWindwardProfile({ agentMetrics }) {
               borderRadius: 99,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#e63946', boxShadow: '0 0 6px #e63946', flexShrink: 0 }} />
-              <span style={{ fontSize: 9, fontWeight: 600, color: '#fca5a5', fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
+              <span style={{ fontSize: 9, fontWeight: 600, color: '#c1342f', fontFamily: 'JetBrains Mono, monospace', whiteSpace: 'nowrap' }}>
                 TERMINAL AGENT
               </span>
             </div>
@@ -192,13 +192,13 @@ export default function JohnWindwardProfile({ agentMetrics }) {
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {stats.map(({ key, val, color }) => (
               <div key={key} style={{
-                background: '#060e1b',
-                border: '1px solid #0d1e34',
+                background: '#f8f4ec',
+                border: '1px solid #e7e1d6',
                 borderRadius: 6, padding: '5px 10px',
                 display: 'flex', flexDirection: 'column', gap: 2,
                 minWidth: 72,
               }}>
-                <div style={{ fontSize: 8, color: '#2d4a6a', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', letterSpacing: '.07em' }}>{key}</div>
+                <div style={{ fontSize: 8, color: '#a69e91', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', letterSpacing: '.07em' }}>{key}</div>
                 <div style={{ fontSize: 11, fontWeight: 700, color, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{String(val)}</div>
               </div>
             ))}
@@ -209,19 +209,19 @@ export default function JohnWindwardProfile({ agentMetrics }) {
       {/* ── Bar chart — fills all remaining space ── */}
       <div style={{
         flex: 1, minHeight: 0,
-        background: '#07101e',
-        border: '1px solid #0d1e34',
+        background: '#fdfbf7',
+        border: '1px solid #e7e1d6',
         borderRadius: 10, padding: '12px 12px 10px',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
       }}>
         {/* Chart header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, marginBottom: 6 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: '#2d4a6a', textTransform: 'uppercase', letterSpacing: '.09em', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: '#a69e91', textTransform: 'uppercase', letterSpacing: '.09em', fontFamily: 'JetBrains Mono, monospace' }}>
             Activity vs System Average
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
-            {[{ color: '#457b9d', label: 'John Windward' }, { color: '#0d2040', label: 'Sys. avg' }].map(l => (
-              <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 9, color: '#2d4a6a', fontFamily: 'JetBrains Mono, monospace' }}>
+            {[{ color: '#457b9d', label: 'John Windward' }, { color: '#e8e1d4', label: 'Sys. avg' }].map(l => (
+              <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 9, color: '#a69e91', fontFamily: 'JetBrains Mono, monospace' }}>
                 <span style={{ display: 'inline-block', width: 12, height: 6, borderRadius: 2, background: l.color }} />
                 {l.label}
               </div>

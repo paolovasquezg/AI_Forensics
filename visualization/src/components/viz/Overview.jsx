@@ -4,18 +4,18 @@ import Tooltip from '../shared/Tooltip'
 import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../../constants'
 
 const FILTERS = [
-  { key: 'all', label: 'All', color: '#64748b' },
-  { key: 'normal', label: 'Normal', color: '#0f1f35' },
-  { key: 'HiddenOrca', label: 'HiddenOrca', color: '#f4a261' },
+  { key: 'all', label: 'All', color: '#7d766b' },
+  { key: 'normal', label: 'Normal', color: '#e7e1d6' },
+  { key: 'HiddenOrca', label: 'HiddenOrca', color: '#c77d3a' },
   { key: 'MellowOtter', label: 'MellowOtter', color: '#457b9d' },
   { key: 'SwiftWren', label: 'SwiftWren', color: '#e63946' },
 ]
 
 function baseEdgeColor(edge) {
   if (edge.in_all_incidents) return '#e63946'
-  if (edge.incidents_count >= 2) return '#f4a261'
-  if (edge.incidents_count === 1) return '#fed7aa'
-  return '#0f1f35'
+  if (edge.incidents_count >= 2) return '#c77d3a'
+  if (edge.incidents_count === 1) return '#e0aa6e'
+  return '#e7e1d6'
 }
 
 function edgeMatchesFilter(edge, filter) {
@@ -80,14 +80,14 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
           x: event.clientX, y: event.clientY,
           children: (
             <div>
-              <div className="font-semibold text-slate-200 mb-1 text-xs">
+              <div className="font-semibold text-slate-800 mb-1 text-xs">
                 {agentLabel(d.from)} → {agentLabel(d.to)}
               </div>
-              <div className="text-slate-400 text-xs">Normal: {d.normal_count}</div>
-              <div className="text-slate-400 text-xs">HiddenOrca: {d.HiddenOrca_count}</div>
-              <div className="text-slate-400 text-xs">MellowOtter: {d.MellowOtter_count}</div>
-              <div className="text-slate-400 text-xs">SwiftWren: {d.SwiftWren_count}</div>
-              <div className="text-slate-300 text-xs mt-1 font-medium">
+              <div className="text-slate-600 text-xs">Normal: {d.normal_count}</div>
+              <div className="text-slate-600 text-xs">HiddenOrca: {d.HiddenOrca_count}</div>
+              <div className="text-slate-600 text-xs">MellowOtter: {d.MellowOtter_count}</div>
+              <div className="text-slate-600 text-xs">SwiftWren: {d.SwiftWren_count}</div>
+              <div className="text-slate-700 text-xs mt-1 font-medium">
                 Score: {(d.intervention_score || 0).toFixed(3)}
               </div>
             </div>
@@ -116,7 +116,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     nodeEl.append('circle')
       .attr('r', d => 4 + Math.sqrt(d.total || 1) * 1.2)
       .attr('fill', d => DEPT_COLOR(d.dept))
-      .attr('stroke', d => d.is_terminal ? '#e63946' : d.is_c2 ? '#a78bfa' : '#060b14')
+      .attr('stroke', d => d.is_terminal ? '#e63946' : d.is_c2 ? '#8a6aa6' : '#fdfbf7')
       .attr('stroke-width', d => (d.is_terminal || d.is_c2) ? 2.5 : 1)
 
     nodeEl
@@ -125,10 +125,10 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
           x: event.clientX, y: event.clientY,
           children: (
             <div>
-              <div className="font-semibold text-slate-200">{d.label}</div>
-              <div className="text-slate-400 text-xs">{deptLabel(d.dept)}</div>
-              {d.is_c2 && <div className="text-purple-400 text-xs">C2 Agent</div>}
-              {d.is_terminal && <div className="text-red-400 text-xs">Terminal Agent</div>}
+              <div className="font-semibold text-slate-800">{d.label}</div>
+              <div className="text-slate-600 text-xs">{deptLabel(d.dept)}</div>
+              {d.is_c2 && <div className="text-violet-600 text-xs">C2 Agent</div>}
+              {d.is_terminal && <div className="text-red-600 text-xs">Terminal Agent</div>}
               <div className="text-slate-500 text-xs mt-1">Total activity: {d.total}</div>
             </div>
           )
@@ -152,7 +152,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     if (!linkEl) return
 
     linkEl
-      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#0a1628')
+      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#efeae0')
       .attr('opacity', d => {
         if (!edgeMatchesFilter(d, filter)) return 0.08
         return filter === 'all'
@@ -171,28 +171,28 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 6, minHeight: 0 }}>
       {/* Filters */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 9, color: '#2d4a6a', fontFamily: 'JetBrains Mono, monospace', marginRight: 2 }}>Filter:</span>
+        <span style={{ fontSize: 9, color: '#a69e91', fontFamily: 'JetBrains Mono, monospace', marginRight: 2 }}>Filter:</span>
         {FILTERS.map(({ key, label, color }) => (
-          <button key={key} onClick={() => setFilter(key)} className="chip" style={filter === key ? { background: color + '20', borderColor: color + '60', color: '#f1f5f9' } : {}}>
+          <button key={key} onClick={() => setFilter(key)} className="chip" style={filter === key ? { background: color + '20', borderColor: color + '60', color: '#2b2823' } : {}}>
             {label}
           </button>
         ))}
       </div>
 
       {/* Network SVG — fills remaining space */}
-      <div ref={wrapRef} style={{ flex: 1, minHeight: 0, borderRadius: 6, overflow: 'hidden', border: '1px solid #0d1e34', background: '#060b14' }}>
+      <div ref={wrapRef} style={{ flex: 1, minHeight: 0, borderRadius: 6, overflow: 'hidden', border: '1px solid #e7e1d6', background: '#f8f4ec' }}>
         <svg ref={svgRef} style={{ width: '100%', height: '100%', display: 'block' }} />
       </div>
 
       {/* Legend */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flexShrink: 0 }}>
         {[
-          { dash: true, color: '#334155', label: 'Normal' },
-          { dash: true, color: '#fcd34d', label: '1 incident' },
-          { dash: true, color: '#f97316', label: '2 incidents' },
+          { dash: true, color: '#a69e91', label: 'Normal' },
+          { dash: true, color: '#e3c069', label: '1 incident' },
+          { dash: true, color: '#d4823a', label: '2 incidents' },
           { dash: true, color: '#e63946', label: 'All 3' },
           { ring: true, color: '#e63946', label: 'John W.' },
-          { ring: true, color: '#a78bfa', label: 'C2 agent' },
+          { ring: true, color: '#8a6aa6', label: 'C2 agent' },
           ...DEPT_IDS.map(id => ({ dot: true, color: DEPT_COLOR(id), label: DEPT_LABELS[id] }))
         ].map((l, i) => (
           <div key={i} className="legend-item">

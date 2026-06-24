@@ -71,11 +71,11 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
     defs.append('marker').attr('id', `arrow-${selectedIncident}`)
       .attr('viewBox', '0 -5 10 10').attr('refX', 18).attr('refY', 0)
       .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
-      .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#2d4a6a')
+      .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#a69e91')
 
     const linkEl = svg.append('g').selectAll('line')
       .data(links).join('line')
-      .attr('stroke', '#0d2040')
+      .attr('stroke', '#e8e1d4')
       .attr('stroke-width', d => Math.max(1, Math.sqrt(d.count) * 1.4))
       .attr('opacity', 0.6)
       .attr('marker-end', `url(#arrow-${selectedIncident})`)
@@ -100,9 +100,9 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       .attr('fill', d => DEPT_COLOR(d.dept))
       .attr('stroke', d => {
         if (d.id === terminalId) return '#e63946'
-        if (d.id === originId)   return '#22c55e'
-        if (d.is_c2)             return '#a78bfa'
-        return '#060b14'
+        if (d.id === originId)   return '#5f8a4e'
+        if (d.is_c2)             return '#8a6aa6'
+        return '#fdfbf7'
       })
       .attr('stroke-width', d => (d.id === terminalId || d.id === originId || d.is_c2) ? 2.5 : 1.5)
 
@@ -110,7 +110,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       .append('circle')
       .attr('r', d => 11 + Math.sqrt(d.participation) * 1.8)
       .attr('fill', 'none')
-      .attr('stroke', '#a78bfa')
+      .attr('stroke', '#8a6aa6')
       .attr('stroke-width', 1)
       .attr('stroke-dasharray', '4,3')
       .attr('opacity', 0.5)
@@ -120,7 +120,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       .attr('dy', d => -(9 + Math.sqrt(d.participation) * 1.6))
       .attr('text-anchor', 'middle')
       .attr('font-size', 9)
-      .attr('fill', '#4a7098')
+      .attr('fill', '#7d766b')
       .text(d => d.label.split(' ')[0])
       .attr('visibility', showLabels ? 'visible' : 'hidden')
 
@@ -130,10 +130,10 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
           x: event.clientX, y: event.clientY,
           children: (
             <div>
-              <div className="font-semibold text-slate-200">{d.label}</div>
-              <div className="text-slate-400 text-xs">{deptLabel(d.dept)}</div>
-              {d.is_c2 && <div className="text-purple-400 text-xs font-semibold mt-1">C2 Agent</div>}
-              <div className="text-slate-400 text-xs mt-1">Participation: {d.participation} events</div>
+              <div className="font-semibold text-slate-800">{d.label}</div>
+              <div className="text-slate-600 text-xs">{deptLabel(d.dept)}</div>
+              {d.is_c2 && <div className="text-violet-600 text-xs font-semibold mt-1">C2 Agent</div>}
+              <div className="text-slate-600 text-xs mt-1">Participation: {d.participation} events</div>
             </div>
           )
         })
@@ -189,7 +189,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
               style={selectedIncident === n ? {
                 background: INCIDENT_COLOR[n] + '20',
                 borderColor: INCIDENT_COLOR[n] + '60',
-                color: '#f1f5f9'
+                color: '#2b2823'
               } : {}}>
               {n}
             </button>
@@ -204,8 +204,8 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       <div ref={wrapRef} style={{
         flex: 1, minHeight: 0,
         borderRadius: 6, overflow: 'hidden',
-        border: '1px solid #0d1e34',
-        background: '#060b14',
+        border: '1px solid #e7e1d6',
+        background: '#f8f4ec',
       }}>
         <svg ref={svgRef} style={{ width: '100%', height: '100%', display: 'block' }} />
       </div>
@@ -213,9 +213,9 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       {/* Legend */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flexShrink: 0 }}>
         {[
-          { ring: true, color: '#22c55e', label: 'Origin' },
+          { ring: true, color: '#5f8a4e', label: 'Origin' },
           { ring: true, color: '#e63946', label: 'Terminal' },
-          { ring: true, color: '#a78bfa', label: 'C2 agent' },
+          { ring: true, color: '#8a6aa6', label: 'C2 agent' },
           ...DEPT_IDS.map(id => ({ dot: true, color: DEPT_COLOR(id), label: DEPT_LABELS[id] }))
         ].map((l, i) => (
           <div key={i} className="legend-item">

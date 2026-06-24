@@ -11,10 +11,10 @@ const C2_AGENTS_ORDERED = [
 ]
 
 const AGENT_COLORS = {
-  'Agent/person:zoey_drydock':  '#38bdf8',
-  'Agent/person:gabriel_sonar': '#fb923c',
-  'Agent/person:owen_hatch':    '#a78bfa',
-  'Agent/person:evelyn_dock':   '#34d399'
+  'Agent/person:zoey_drydock':  '#5b9bb5',
+  'Agent/person:gabriel_sonar': '#e0944a',
+  'Agent/person:owen_hatch':    '#8a6aa6',
+  'Agent/person:evelyn_dock':   '#6fa07e'
 }
 
 function comboLabel(raw) {
@@ -77,22 +77,22 @@ export default function C2Beacons({ c2Beacons }) {
         .tickFormat(d => d3.timeFormat('%b %d')(new Date(d * 1000)))
       )
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#0d1e34')
-        ax.selectAll('text').attr('fill', '#2d4a6a').attr('font-size', 9)
+        ax.select('.domain').attr('stroke', '#e7e1d6')
+        ax.selectAll('text').attr('fill', '#a69e91').attr('font-size', 9)
           .attr('transform', 'rotate(-30)').attr('text-anchor', 'end')
-        ax.selectAll('line').attr('stroke', '#0d1e34')
+        ax.selectAll('line').attr('stroke', '#e7e1d6')
       })
 
     g.append('g').call(d3.axisLeft(yScale).ticks(4))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#0d1e34')
-        ax.selectAll('text').attr('fill', '#2d4a6a').attr('font-size', 9)
-        ax.selectAll('line').attr('stroke', '#0d1e34')
+        ax.select('.domain').attr('stroke', '#e7e1d6')
+        ax.selectAll('text').attr('fill', '#a69e91').attr('font-size', 9)
+        ax.selectAll('line').attr('stroke', '#e7e1d6')
       })
 
     g.append('text')
       .attr('transform', `translate(-34,${iH / 2}) rotate(-90)`)
-      .attr('text-anchor', 'middle').attr('fill', '#2d4a6a').attr('font-size', 9)
+      .attr('text-anchor', 'middle').attr('fill', '#a69e91').attr('font-size', 9)
       .text('beacons / hr')
 
     const stack = d3.stack().keys(C2_AGENTS_ORDERED).value((d, k) => d[k] || 0)
@@ -115,13 +115,13 @@ export default function C2Beacons({ c2Beacons }) {
             x: event.clientX, y: event.clientY,
             children: (
               <div>
-                <div className="font-semibold text-slate-200 text-xs mb-1">
+                <div className="font-semibold text-slate-800 text-xs mb-1">
                   {d3.timeFormat('%b %d %H:00')(new Date(d.data.hourBin * 1000))}
                 </div>
                 <div className="text-xs" style={{ color: AGENT_COLORS[agentId] }}>
                   {agentLabel(agentId)}: {d.data[agentId] || 0}
                 </div>
-                <div className="text-slate-400 text-xs mt-1">Total: {total}</div>
+                <div className="text-slate-600 text-xs mt-1">Total: {total}</div>
               </div>
             )
           })
@@ -135,10 +135,10 @@ export default function C2Beacons({ c2Beacons }) {
     g.append('line')
       .attr('x1', lastX + 3).attr('x2', lastX + 3)
       .attr('y1', 0).attr('y2', iH)
-      .attr('stroke', '#2d4a6a').attr('stroke-dasharray', '3,3').attr('stroke-width', 1.5)
+      .attr('stroke', '#a69e91').attr('stroke-dasharray', '3,3').attr('stroke-width', 1.5)
     g.append('text')
       .attr('x', lastX + 6).attr('y', 12)
-      .attr('fill', '#2d4a6a').attr('font-size', 8)
+      .attr('fill', '#a69e91').attr('font-size', 8)
       .text('silence →')
 
   }, [stacked])
@@ -160,13 +160,13 @@ export default function C2Beacons({ c2Beacons }) {
             : []
           return (
             <div key={agentId} style={{
-              background: '#060e1b',
+              background: '#f8f4ec',
               border: `1px solid ${color}30`,
               borderRadius: 7, padding: '8px 10px',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, flexShrink: 0 }} />
-                <span style={{ fontSize: 10, fontWeight: 600, color: '#e2e8f0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: '#2b2823', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {agentLabel(agentId)}
                 </span>
               </div>
@@ -180,7 +180,7 @@ export default function C2Beacons({ c2Beacons }) {
                   borderRadius: 3, fontFamily: 'JetBrains Mono, monospace',
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>
-                  {label} <span style={{ color: '#2d4a6a' }}>×{count.toLocaleString()}</span>
+                  {label} <span style={{ color: '#a69e91' }}>×{count.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -201,11 +201,11 @@ export default function C2Beacons({ c2Beacons }) {
       {/* Chart — fills remaining space */}
       <div ref={wrapRef} style={{
         flex: 1, minHeight: 0,
-        background: '#060e1b', border: '1px solid #0d1e34',
+        background: '#f8f4ec', border: '1px solid #e7e1d6',
         borderRadius: 7, padding: '8px 8px 4px',
         display: 'flex', flexDirection: 'column',
       }}>
-        <div style={{ fontSize: 9, color: '#2d4a6a', fontFamily: 'JetBrains Mono, monospace', marginBottom: 4 }}>
+        <div style={{ fontSize: 9, color: '#a69e91', fontFamily: 'JetBrains Mono, monospace', marginBottom: 4 }}>
           BEACONS PER HOUR — {c2Beacons.events?.length?.toLocaleString()} total signals
         </div>
         <div style={{ flex: 1, minHeight: 0, position: 'relative' }}>
@@ -216,12 +216,12 @@ export default function C2Beacons({ c2Beacons }) {
       {/* Insight */}
       <div style={{
         flexShrink: 0, padding: '8px 12px',
-        background: '#060e1b', border: '1px solid #1a0d2e',
-        borderLeft: '2px solid #a78bfa',
-        borderRadius: '0 6px 6px 0', fontSize: 10, color: '#4a7098', lineHeight: 1.5,
+        background: '#f8f4ec', border: '1px solid #f1ebf3',
+        borderLeft: '2px solid #8a6aa6',
+        borderRadius: '0 6px 6px 0', fontSize: 10, color: '#7d766b', lineHeight: 1.5,
       }}>
-        Four agents sent <code style={{ background: '#0d1e34', borderRadius: 3, padding: '1px 4px', color: '#93c5fd', fontFamily: 'JetBrains Mono, monospace' }}>check_in</code> events
-        with <code style={{ background: '#0d1e34', borderRadius: 3, padding: '1px 4px', color: '#93c5fd', fontFamily: 'JetBrains Mono, monospace' }}>virus: true</code> during May 10–12, coinciding exactly with SwiftWren propagation, then stopped completely.
+        Four agents sent <code style={{ background: '#e7e1d6', borderRadius: 3, padding: '1px 4px', color: '#3f6f9e', fontFamily: 'JetBrains Mono, monospace' }}>check_in</code> events
+        with <code style={{ background: '#e7e1d6', borderRadius: 3, padding: '1px 4px', color: '#3f6f9e', fontFamily: 'JetBrains Mono, monospace' }}>virus: true</code> during May 10–12, coinciding exactly with SwiftWren propagation, then stopped completely.
       </div>
 
       {tooltip && <Tooltip x={tooltip.x} y={tooltip.y}>{tooltip.children}</Tooltip>}

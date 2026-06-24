@@ -20,7 +20,7 @@ function Panel({ title, hint, children, style = {} }) {
     <div className="panel" style={style}>
       <div className="panel-head">
         <span className="panel-title">{title}</span>
-        {hint && <span style={{ fontSize: 9, color: '#1e3a5f', fontFamily: 'JetBrains Mono,monospace' }}>{hint}</span>}
+        {hint && <span style={{ fontSize: 9, color: '#a69e91', fontFamily: 'JetBrains Mono,monospace' }}>{hint}</span>}
       </div>
       <div className="panel-body">{children}</div>
     </div>
@@ -29,10 +29,10 @@ function Panel({ title, hint, children, style = {} }) {
 
 function AttackPattern() {
   const steps = [
-    { label: 'Inject',    desc: '*_further_instructions.md placed', c: '#f4a261' },
-    { label: 'Propagate', desc: 'queue_subordinate_task chain',     c: '#64748b' },
+    { label: 'Inject',    desc: '*_further_instructions.md placed', c: '#c77d3a' },
+    { label: 'Propagate', desc: 'queue_subordinate_task chain',     c: '#7d766b' },
     { label: 'Post',      desc: 'john_windward → SaidIT/general',  c: '#e63946' },
-    { label: 'Wipe',      desc: 'Both files deleted immediately',   c: '#475569' },
+    { label: 'Wipe',      desc: 'Both files deleted immediately',   c: '#7d766b' },
   ]
   return (
     <div className="flow-steps">
@@ -49,9 +49,9 @@ function AttackPattern() {
 
 const TABS = [
   { id: 'network',     label: 'Attack Network', dot: '#e63946' },
-  { id: 'propagation', label: 'Propagation',    dot: '#f4a261' },
+  { id: 'propagation', label: 'Propagation',    dot: '#c77d3a' },
   { id: 'incidents',   label: 'Incidents',      dot: '#457b9d' },
-  { id: 'agents',      label: 'Agents & C2',    dot: '#a78bfa' },
+  { id: 'agents',      label: 'Agents & C2',    dot: '#8a6aa6' },
 ]
 
 // ─────────────────────────────────────────────────
@@ -64,8 +64,8 @@ const TABS = [
 function ViewNetwork({ data, incident, setIncident }) {
   const kpis = [
     { val: '3',      lbl: 'Incidents',     sub: 'Orca · Otter · Wren',     c: '#e63946' },
-    { val: '186',    lbl: 'Max hops',      sub: 'SwiftWren — 193.6h',       c: '#f4a261' },
-    { val: '15,051', lbl: 'C2 beacons',   sub: 'May 10–12 · 4 agents',     c: '#a78bfa' },
+    { val: '186',    lbl: 'Max hops',      sub: 'SwiftWren — 193.6h',       c: '#c77d3a' },
+    { val: '15,051', lbl: 'C2 beacons',   sub: 'May 10–12 · 4 agents',     c: '#8a6aa6' },
     { val: '1',      lbl: 'Terminal agent',sub: 'john_windward every time', c: '#457b9d' },
   ]
 
@@ -82,8 +82,8 @@ function ViewNetwork({ data, incident, setIncident }) {
       {/* Attack Network */}
       <div className="panel" style={{ gridColumn: '1', gridRow: '1' }}>
         <div className="panel-head">
-          <span className="panel-title" style={{ color: '#4a7098', fontSize: 11 }}>⬡ Attack Network</span>
-          <span style={{ fontSize: 9, color: '#1e3a5f', fontFamily: 'JetBrains Mono,monospace' }}>drag nodes · hover edges</span>
+          <span className="panel-title" style={{ color: '#7d766b', fontSize: 11 }}>⬡ Attack Network</span>
+          <span style={{ fontSize: 9, color: '#a69e91', fontFamily: 'JetBrains Mono,monospace' }}>drag nodes · hover edges</span>
         </div>
         <div className="panel-body">
           <SystemOverview
@@ -97,7 +97,7 @@ function ViewNetwork({ data, incident, setIncident }) {
       <div className="panel" style={{ gridColumn: '2', gridRow: '1 / 3' }}>
         <div className="panel-head">
           <span className="panel-title">Event Network</span>
-          <span style={{ fontSize: 9, color: '#1e3a5f', fontFamily: 'JetBrains Mono,monospace' }}>per incident</span>
+          <span style={{ fontSize: 9, color: '#a69e91', fontFamily: 'JetBrains Mono,monospace' }}>per incident</span>
         </div>
         <div className="panel-body">
           <PropagationNetwork
@@ -260,7 +260,7 @@ export default function App() {
   if (data.error) return (
     <div className="loading-wrap">
       <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 11, color: '#e63946' }}>DATA ERROR</div>
-      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9,  color: '#1e3a5f', marginTop: 6 }}>{data.error}</div>
+      <div style={{ fontFamily: 'JetBrains Mono,monospace', fontSize: 9,  color: '#a69e91', marginTop: 6 }}>{data.error}</div>
     </div>
   )
 

@@ -73,7 +73,7 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
       .attr('x', d => (xScale(d) || 0) + xScale.bandwidth() / 2)
       .attr('y', -6)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#475569')
+      .attr('fill', '#7d766b')
       .attr('font-size', 9)
       .text(d => d.slice(5))
 
@@ -86,7 +86,7 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
       .attr('y', d => (yScale(d) || 0) + yScale.bandwidth() / 2 + 3)
       .attr('text-anchor', 'end')
       .attr('font-size', 9)
-      .attr('fill', d => d === 'person:john_windward' ? '#e63946' : '#475569')
+      .attr('fill', d => d === 'person:john_windward' ? '#e63946' : '#7d766b')
       .attr('font-weight', d => d === 'person:john_windward' ? 'bold' : 'normal')
       .text(d => agentLabel(d))
 
@@ -114,9 +114,9 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
           x: event.clientX, y: event.clientY,
           children: (
             <div>
-              <div className="font-semibold text-slate-200">{agentLabel(d.person)}</div>
-              <div className="text-slate-400 text-xs">{d.date}</div>
-              <div className="text-slate-300 text-xs mt-1">Events: {d.count}</div>
+              <div className="font-semibold text-slate-800">{agentLabel(d.person)}</div>
+              <div className="text-slate-600 text-xs">{d.date}</div>
+              <div className="text-slate-700 text-xs mt-1">Events: {d.count}</div>
             </div>
           )
         })
@@ -162,16 +162,16 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3 flex-wrap">
-        <div className="text-xs text-slate-400">Event:</div>
+        <div className="text-xs text-slate-600">Event:</div>
         {eventTypes.map(t => (
           <button
             key={t}
             onClick={() => setEventFilter(t)}
             className="px-2.5 py-1 rounded text-xs border transition-all"
             style={{
-              background: eventFilter === t ? '#0f1f35' : 'transparent',
-              borderColor: eventFilter === t ? '#64748b' : '#0a1628',
-              color: eventFilter === t ? '#f1f5f9' : '#64748b'
+              background: eventFilter === t ? '#e7e1d6' : 'transparent',
+              borderColor: eventFilter === t ? '#7d766b' : '#efeae0',
+              color: eventFilter === t ? '#2b2823' : '#7d766b'
             }}
           >
             {t}
@@ -179,7 +179,7 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
         ))}
       </div>
 
-      <div ref={wrapRef} className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4 overflow-auto max-h-[600px]">
+      <div ref={wrapRef} className="bg-white rounded-lg border border-slate-200 p-4 overflow-auto max-h-[600px]">
         <svg ref={svgRef} />
       </div>
 
@@ -189,11 +189,11 @@ export default function DailyHeatmap({ dailyAggregates, agentMetrics }) {
           john_windward row
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="text-red-400">│</span>
+          <span className="text-red-600">│</span>
           Anomalous post dates
         </span>
         <span className="flex items-center gap-2">
-          <span className="text-slate-400">Event count:</span>
+          <span className="text-slate-600">Event count:</span>
           <span className="text-slate-500">Low</span>
           <span
             className="inline-block w-24 h-3 rounded"

@@ -3,8 +3,8 @@ import * as d3 from 'd3'
 export const INCIDENT_NAMES = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
 
 export const INCIDENT_COLOR = {
-  normal: '#64748b',
-  HiddenOrca: '#f4a261',
+  normal: '#7d766b',
+  HiddenOrca: '#c77d3a',
   MellowOtter: '#457b9d',
   SwiftWren: '#e63946'
 }
@@ -29,7 +29,7 @@ export const DEPT_LABELS = {
 
 export const DEPT_COLOR = d3.scaleOrdinal()
   .domain(DEPT_IDS)
-  .range(['#6a0dad', '#2a9d8f', '#e9c46a', '#f4a261', '#264653', '#e76f51'])
+  .range(['#6e4f7d', '#2a9d8f', '#e9c46a', '#c77d3a', '#264653', '#e76f51'])
 
 export const C2_AGENTS = [
   'Agent/person:zoey_drydock',
@@ -68,7 +68,7 @@ export const SECTIONS = [
 
 export const COMBO_COLORS = d3.scaleOrdinal()
   .domain(["fence,irrigation", "barn,cattle", "crop,irrigation", "manure,wheat", "crop,harvest"])
-  .range(["#38bdf8", "#34d399", "#fb923c", "#f472b6", "#a78bfa"])
+  .range(["#5b9bb5", "#6fa07e", "#e0944a", "#d486a4", "#8a6aa6"])
 
 export function buildPersonDeptLookup(graphData) {
   if (!graphData) return {}

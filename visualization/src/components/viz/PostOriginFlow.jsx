@@ -8,9 +8,9 @@ function OriginCard({ step, label, detail, color, icon }) {
     <div className="flex flex-col items-center">
       <div className="w-full rounded border p-3 text-xs" style={{ borderColor: color + '40', background: color + '10' }}>
         <div className="font-semibold mb-1" style={{ color }}>{icon} {label}</div>
-        <div className="text-slate-400 text-xs whitespace-pre-line">{detail}</div>
+        <div className="text-slate-600 text-xs whitespace-pre-line">{detail}</div>
       </div>
-      <div className="w-px h-5 bg-[#0d1829] mt-0.5" />
+      <div className="w-px h-5 bg-slate-200 mt-0.5" />
     </div>
   )
 }
@@ -28,21 +28,21 @@ function IncidentColumn({ name, chain }) {
       </div>
       <div className="space-y-0.5 text-center">
         {chain.create_event ? (
-          <OriginCard label="File Created" color="#22c55e"
+          <OriginCard label="File Created" color="#5f8a4e"
             detail={`${agentLabel(chain.create_event.agent)}\n${chain.create_event.datetime?.slice(0, 16)}\n${chain.file_instructions}`}
           />
         ) : (
-          <OriginCard label="File Discovered" color="#22c55e"
+          <OriginCard label="File Discovered" color="#5f8a4e"
             detail={`${agentLabel(chain.origin_agent)} found file\n${chain.start_datetime?.slice(0, 16)}\n${chain.file_instructions}`}
           />
         )}
-        <OriginCard label="Propagation" color="#f4a261"
+        <OriginCard label="Propagation" color="#c77d3a"
           detail={`${chain.hop_count} hops · ${chain.agents_count} agents\n${chain.duration_hours.toFixed(1)} hours\nvia queue_subordinate_task`}
         />
         <OriginCard label="Post Triggered" color="#e63946"
           detail={`${agentLabel(chain.post_event?.agent)}\n${chain.post_event?.datetime?.slice(0, 16)}\nSource: ${chain.file_content}`}
         />
-        <OriginCard label="Evidence Wiped" color="#64748b"
+        <OriginCard label="Evidence Wiped" color="#7d766b"
           detail={chain.delete_events.map(d => `${d.target}`).join('\n')}
         />
       </div>
@@ -77,9 +77,9 @@ export default function PostOriginFlow({ chains, posts }) {
     g.append('g').attr('transform', `translate(0,${iH})`)
       .call(d3.axisBottom(xScale).ticks(6).tickFormat(d3.timeFormat('%b %d')))
       .call(ax => {
-        ax.select('.domain').attr('stroke', '#0f1f35')
-        ax.selectAll('text').attr('fill', '#64748b').attr('font-size', 10)
-        ax.selectAll('line').attr('stroke', '#0f1f35')
+        ax.select('.domain').attr('stroke', '#e7e1d6')
+        ax.selectAll('text').attr('fill', '#7d766b').attr('font-size', 10)
+        ax.selectAll('line').attr('stroke', '#e7e1d6')
       })
 
     // Normal posts
@@ -90,16 +90,16 @@ export default function PostOriginFlow({ chains, posts }) {
       .attr('cx', d => xScale(new Date(d.datetime)))
       .attr('cy', iH / 2)
       .attr('r', 4)
-      .attr('fill', '#64748b')
+      .attr('fill', '#7d766b')
       .attr('opacity', 0.5)
       .on('mousemove', (event, d) => {
         setTooltip({
           x: event.clientX, y: event.clientY,
           children: (
             <div>
-              <div className="font-semibold text-slate-200 text-xs">{d.datetime?.slice(0, 16)}</div>
-              <div className="text-slate-400 text-xs">{agentLabel(d.poster)}</div>
-              <div className="text-slate-300 text-xs mt-1">{d.content}</div>
+              <div className="font-semibold text-slate-800 text-xs">{d.datetime?.slice(0, 16)}</div>
+              <div className="text-slate-600 text-xs">{agentLabel(d.poster)}</div>
+              <div className="text-slate-700 text-xs mt-1">{d.content}</div>
             </div>
           )
         })
@@ -124,7 +124,7 @@ export default function PostOriginFlow({ chains, posts }) {
       .attr('cy', iH / 2)
       .attr('r', 9)
       .attr('fill', d => INCIDENT_COLOR[d.incident])
-      .attr('stroke', '#060b14').attr('stroke-width', 2)
+      .attr('stroke', '#fdfbf7').attr('stroke-width', 2)
       .style('cursor', 'pointer')
       .on('mousemove', (event, d) => {
         setTooltip({
@@ -132,9 +132,9 @@ export default function PostOriginFlow({ chains, posts }) {
           children: (
             <div>
               <div className="font-semibold" style={{ color: INCIDENT_COLOR[d.incident] }}>{d.incident}</div>
-              <div className="text-slate-400 text-xs">{d.datetime?.slice(0, 16)}</div>
-              <div className="text-slate-300 text-xs mt-1">Source: {d.content_source}</div>
-              <div className="text-slate-400 text-xs">Poster: {agentLabel(d.poster)}</div>
+              <div className="text-slate-600 text-xs">{d.datetime?.slice(0, 16)}</div>
+              <div className="text-slate-700 text-xs mt-1">Source: {d.content_source}</div>
+              <div className="text-slate-600 text-xs">Poster: {agentLabel(d.poster)}</div>
             </div>
           )
         })
@@ -157,8 +157,8 @@ export default function PostOriginFlow({ chains, posts }) {
   return (
     <div className="space-y-6">
       {/* Timeline scatter */}
-      <div className="bg-slate-900/40 rounded-lg border border-slate-800/60 p-4">
-        <div className="text-base font-semibold text-slate-300 mb-4">
+      <div className="bg-white rounded-lg border border-slate-200 p-4">
+        <div className="text-base font-semibold text-slate-700 mb-4">
           SaidIT posts - {posts.posts.length} total and 3 anomalous
         </div>
         <div ref={wrapRef}>
@@ -168,7 +168,7 @@ export default function PostOriginFlow({ chains, posts }) {
 
       {/* 3-column origin flow */}
       <div>
-        <div className="text-base font-semibold text-slate-300 mb-4">Posts origin</div>
+        <div className="text-base font-semibold text-slate-700 mb-4">Posts origin</div>
         <div className="flex gap-4">
           {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
             <IncidentColumn key={n} name={n} chain={chains[n]} />
@@ -177,12 +177,12 @@ export default function PostOriginFlow({ chains, posts }) {
       </div>
 
       {/* Key insight */}
-      <div className="bg-[#090f1c]/60 border border-red-900/30 rounded-lg p-4 text-sm text-slate-400 text-center">
-        All 3 anomalous posts have <code className="text-slate-300 bg-[#0d1829] px-1 rounded">content: null</code> — their
-        content comes from external <code className="text-slate-300 bg-[#0d1829] px-1 rounded">.txt</code> files
+      <div className="bg-slate-50 border border-red-200 rounded-lg p-4 text-sm text-slate-600 text-center">
+        All 3 anomalous posts have <code className="text-slate-700 bg-slate-200 px-1 rounded">content: null</code> — their
+        content comes from external <code className="text-slate-700 bg-slate-200 px-1 rounded">.txt</code> files
         and propagated via the worm. All are posted by
-        <code className="text-slate-300 bg-[#0d1829] px-1 rounded mx-1">john_windward</code>
-        to <code className="text-slate-300 bg-[#0d1829] px-1 rounded">SaidIT/general</code>.
+        <code className="text-slate-700 bg-slate-200 px-1 rounded mx-1">john_windward</code>
+        to <code className="text-slate-700 bg-slate-200 px-1 rounded">SaidIT/general</code>.
       </div>
 
       {tooltip && <Tooltip x={tooltip.x} y={tooltip.y}>{tooltip.children}</Tooltip>}
