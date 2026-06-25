@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
 import * as d3 from 'd3'
-import Tooltip from '../shared/Tooltip'
+import Tooltip from './Tooltip'
 
 export default function JohnWindward({ agentMetrics }) {
   const svgRef = useRef(null)

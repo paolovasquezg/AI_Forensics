@@ -1,6 +1,6 @@
 import { INCIDENT_COLOR } from '../constants'
-import Flow from '../components/components/Flow'
-import Pattern from '../components/components/Pattern'
+import Flow from '../components/Flow'
+import Pattern from '../components/Pattern'
 
 const INCIDENTS = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
 

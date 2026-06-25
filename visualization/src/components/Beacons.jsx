@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import * as d3 from 'd3'
-import Tooltip from '../shared/Tooltip'
+import Tooltip from './Tooltip'
 import { agentLabel } from '../../constants'
 
 const C2_AGENTS_ORDERED = [

@@ -1,7 +1,7 @@
-import Propagation from '../components/components/Propagation'
-import Timeline from '../components/components/Timeline'
-import Intervention from '../components/components/Intervention'
-import Beacons from '../components/components/Beacons'
+import Propagation from '../components/Propagation'
+import Timeline from '../components/Timeline'
+import Intervention from '../components/Intervention'
+import Beacons from '../components/Beacons'
 
 const INCIDENTS = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
 

@@ -1,5 +1,5 @@
-import Overview from '../components/components/Overview'
-import JohnWindward from '../components/components/JohnWindward'
+import Overview from '../components/Overview'
+import JohnWindward from '../components/JohnWindward'
 
 export default function EmployeeNetwork({ data, filter, onFilterChange, jwSelected, onJwToggle, onJwDismiss }) {
   return (

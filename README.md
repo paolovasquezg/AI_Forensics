@@ -43,19 +43,39 @@ transformations/
 visualization/            
   src/
     App.jsx              
+    main.jsx              
+    index.css             
     constants.js          
     hooks/useData.js      
+    views/
+      Bottom.jsx          
+      Employee.jsx        
+      Event.jsx           
+      Network.jsx         
     components/
-      Sidebar.jsx         
-      Wrapper.jsx         
-      Summary.jsx         
-      viz/                
+      Beacons.jsx         
+      Flow.jsx            
+      Intervention.jsx    
+      JohnWindward.jsx    
+      Overview.jsx        
+      Pattern.jsx         
+      Propagation.jsx     
+      Timeline.jsx        
+      Tooltip.jsx         
   vite.config.js          
 
 info/
   transformations.md      
   visualization.md 
 ```
+
+---
+
+## Visualization
+
+![Dashboard](images/Dashboard.png)
+
+---
 
 ---
 
@@ -82,5 +102,3 @@ cd visualization
 npm install
 npm run dev        # opens at http://localhost:5173
 ```
-
----
