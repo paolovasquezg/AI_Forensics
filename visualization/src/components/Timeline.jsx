@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from './Tooltip'
-import { INCIDENT_COLOR, agentLabel } from '../../constants'
+import { INCIDENT_COLOR, agentLabel } from '../constants'
 
 export default function Timeline({ chains, selectedIncident, onIncidentChange }) {
   const svgRef = useRef(null)

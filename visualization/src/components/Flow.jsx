@@ -1,4 +1,4 @@
-import { agentLabel } from '../../constants'
+import { agentLabel } from '../constants'
 
 export default function Flow({ chain }) {
   if (!chain) return null
