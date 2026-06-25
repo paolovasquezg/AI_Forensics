@@ -2,16 +2,16 @@ import { useEffect, useRef, useCallback, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from '../shared/Tooltip'
 
-export default function JohnWindwardProfile({ agentMetrics }) {
-  const svgRef     = useRef(null)
-  const chartWrap  = useRef(null)
+export default function JohnWindward({ agentMetrics }) {
+  const svgRef = useRef(null)
+  const chartWrap = useRef(null)
   const [tooltip, setTooltip] = useState(null)
 
   const jw = agentMetrics?.agents?.find(a => a.agent_id === 'Agent/person:john_windward')
   const avgMetrics = agentMetrics?.agents?.reduce(
     (acc, a) => {
-      acc.sent_normal  += a.sent_normal
-      acc.recv_normal  += a.recv_normal
+      acc.sent_normal += a.sent_normal
+      acc.recv_normal += a.recv_normal
       acc.anomaly_recv += a.anomaly_recv_total
       acc.count += 1
       return acc
@@ -24,19 +24,19 @@ export default function JohnWindwardProfile({ agentMetrics }) {
     if (!jw || !svgRef.current || !chartWrap.current || !avgMetrics?.count) return
     const avg = avgMetrics
 
-    const W = chartWrap.current.offsetWidth  || 360
+    const W = chartWrap.current.offsetWidth || 360
     const H = chartWrap.current.offsetHeight || 200
     if (!W || !H) return
 
     const metrics = [
-      { label: 'Sent (normal)',     jw: jw.sent_normal,        avg: avg.sent_normal  / avg.count },
-      { label: 'Recv (normal)',     jw: jw.recv_normal,        avg: avg.recv_normal  / avg.count },
-      { label: 'Recv (anomalous)', jw: jw.anomaly_recv_total,  avg: avg.anomaly_recv / avg.count },
+      { label: 'Normal sent', jw: jw.sent_normal, avg: avg.sent_normal / avg.count },
+      { label: 'Normal received', jw: jw.recv_normal, avg: avg.recv_normal / avg.count },
+      { label: 'Anomalous received', jw: jw.anomaly_recv_total, avg: avg.anomaly_recv / avg.count },
     ]
 
-    const m  = { top: 12, right: 56, bottom: 32, left: 112 }
+    const m = { top: 12, right: 56, bottom: 32, left: 112 }
     const iW = W - m.left - m.right
-    const iH = H - m.top  - m.bottom
+    const iH = H - m.top - m.bottom
 
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
@@ -77,9 +77,9 @@ export default function JohnWindwardProfile({ agentMetrics }) {
 
     // avg bar (behind)
     row.append('rect')
-      .attr('y',      d => (yScale(d.label) || 0) + yScale.bandwidth() * 0.46)
+      .attr('y', d => (yScale(d.label) || 0) + yScale.bandwidth() * 0.46)
       .attr('height', yScale.bandwidth() * 0.44)
-      .attr('width',  d => xScale(d.avg))
+      .attr('width', d => xScale(d.avg))
       .attr('fill', '#e8e1d4').attr('rx', 2)
 
     row.append('text')
@@ -90,9 +90,9 @@ export default function JohnWindwardProfile({ agentMetrics }) {
 
     // JW bar (front)
     row.append('rect')
-      .attr('y',      d => yScale(d.label) || 0)
+      .attr('y', d => yScale(d.label) || 0)
       .attr('height', yScale.bandwidth() * 0.44)
-      .attr('width',  d => xScale(d.jw))
+      .attr('width', d => xScale(d.jw))
       .attr('fill', (_, i) => i === 2 ? '#e63946' : '#457b9d')
       .attr('rx', 2)
 
@@ -134,11 +134,11 @@ export default function JohnWindwardProfile({ agentMetrics }) {
   if (!jw) return <div style={{ color: '#7d766b', fontSize: 12 }}>Loading…</div>
 
   const stats = [
-    { key: 'Dept',        val: 'Customer Support',              color: '#e76f51' },
-    { key: 'Sent',        val: jw.sent_normal,                  color: '#4d4842' },
-    { key: 'Recv',        val: jw.recv_normal,                  color: '#4d4842' },
-    { key: 'Anom. recv',  val: jw.anomaly_recv_total,           color: '#e63946' },
-    { key: 'Incidents',   val: jw.incidents_involved?.join(', '), color: '#c77d3a' },
+    { key: 'Dept', val: 'Customer Support', color: '#e76f51' },
+    { key: 'Sent', val: jw.sent_normal, color: '#4d4842' },
+    { key: 'Recv', val: jw.recv_normal, color: '#4d4842' },
+    { key: 'Anom. recv', val: jw.anomaly_recv_total, color: '#e63946' },
+    { key: 'Incidents', val: jw.incidents_involved?.join(', '), color: '#c77d3a' },
   ]
 
   return (

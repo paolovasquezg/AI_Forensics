@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from '../shared/Tooltip'
-import { INCIDENT_COLOR, agentLabel, shortDate } from '../../constants'
+import { INCIDENT_COLOR, agentLabel } from '../../constants'
 
-export default function IncidentTimeline({ chains, selectedIncident, onIncidentChange }) {
+export default function Timeline({ chains, selectedIncident, onIncidentChange }) {
   const svgRef = useRef(null)
   const wrapRef = useRef(null)
   const [tooltip, setTooltip] = useState(null)
@@ -150,25 +150,18 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
       if (refTime) {
         const dx = xScale(new Date(refTime)) + 8
         const dy = yScale(maxDepth + 1.5)
-        g.append('text').attr('x', dx).attr('y', dy + 4)
+        g.append('text').attr('x', dx - 10).attr('y', dy + 4)
           .attr('fill', '#4d4842').attr('font-size', 13).attr('font-weight', 'bold')
           .text('✕ DELETE')
       }
     }
 
-    // Chart title
-    g.append('text')
-      .attr('x', iW / 2).attr('y', -16)
-      .attr('text-anchor', 'middle')
-      .attr('fill', '#4d4842').attr('font-size', 13).attr('font-weight', 'bold')
-      .text(`${selectedIncident} — ${incident.hop_count} hops`)
-
     // Agent legend (up to 10)
     const legendAgents = uniqueAgents.slice(0, 10)
     const legend = g.append('g').attr('transform', `translate(${iW - 160}, 4)`)
     legendAgents.forEach((a, i) => {
-      legend.append('circle').attr('cx', 0).attr('cy', i * 14).attr('r', 4).attr('fill', agentColors(a))
-      legend.append('text').attr('x', 8).attr('y', i * 14 + 4)
+      legend.append('circle').attr('cx', 40).attr('cy', i * 14).attr('r', 4).attr('fill', agentColors(a))
+      legend.append('text').attr('x', 50).attr('y', i * 14 + 4)
         .attr('fill', '#7d766b').attr('font-size', 9)
         .text(agentLabel(a).split(' ')[0])
     })
@@ -178,58 +171,26 @@ export default function IncidentTimeline({ chains, selectedIncident, onIncidentC
   const incident = chains?.[selectedIncident]
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 6, minHeight: 0 }}>
+      <div style={{ display: 'flex', gap: 5, flexShrink: 0 }}>
         {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
           <button
             key={n}
             onClick={() => onIncidentChange(n)}
-            className="px-4 py-1.5 rounded text-xs font-semibold transition-all border"
-            style={{
-              background: selectedIncident === n ? `${INCIDENT_COLOR[n]}20` : 'transparent',
-              borderColor: selectedIncident === n ? INCIDENT_COLOR[n] : '#e7e1d6',
-              color: selectedIncident === n ? '#2b2823' : '#7d766b'
-            }}
+            className="chip"
+            style={selectedIncident === n ? {
+              background: INCIDENT_COLOR[n] + '20',
+              borderColor: INCIDENT_COLOR[n] + '60',
+              color: '#2b2823'
+            } : {}}
           >
             {n}
           </button>
         ))}
       </div>
 
-      <div className="flex gap-4">
-        <div ref={wrapRef} className="flex-1 bg-white rounded-lg border border-slate-200 p-2 overflow-x-auto">
-          <svg ref={svgRef} />
-        </div>
-
-        {incident && (
-          <div className="w-52 shrink-0 space-y-3">
-            <div className="bg-white border border-slate-200 rounded-lg p-4">
-              <div className="text-base text-slate-600 uppercase tracking-wide mb-3">Stats</div>
-              {[
-                ['Hops', incident.hop_count],
-                ['Duration', `${incident.duration_hours.toFixed(1)} h`],
-                ['Agents', incident.agents_count],
-                ['Origin', agentLabel(incident.origin_agent)],
-                ['Start', shortDate(incident.start_datetime)],
-                ['Post', shortDate(incident.post_event?.datetime)]
-              ].map(([k, v]) => (
-                <div key={k} className="flex justify-between text-xs py-1 border-b border-slate-200">
-                  <span className="text-slate-500">{k}</span>
-                  <span className="text-slate-800 font-medium text-right max-w-[100px] truncate">{v}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-white border border-slate-200 rounded-lg p-4">
-              <div className="text-base text-slate-600 uppercase tracking-wide mb-2">Agents</div>
-              <div className="space-y-1 max-h-81 overflow-y-auto">
-                {incident.agents_involved.map(a => (
-                  <div key={a} className="text-xs text-slate-500 truncate mb-4">{agentLabel(a)}</div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+      <div ref={wrapRef} style={{ flex: 1, minHeight: 0, overflow: 'auto', borderRadius: 6, border: '1px solid #e7e1d6', background: '#f8f4ec' }}>
+        <svg ref={svgRef} />
       </div>
 
       {tooltip && <Tooltip x={tooltip.x} y={tooltip.y}>{tooltip.children}</Tooltip>}

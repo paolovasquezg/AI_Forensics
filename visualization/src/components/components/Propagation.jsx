@@ -3,12 +3,14 @@ import * as d3 from 'd3'
 import Tooltip from '../shared/Tooltip'
 import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../../constants'
 
-export default function PropagationNetwork({ chains, agentMetrics, selectedIncident, onIncidentChange }) {
-  const svgRef   = useRef(null)
-  const wrapRef  = useRef(null)
-  const simRef   = useRef(null)
-  const [tooltip, setTooltip]     = useState(null)
+export default function Propagation({ chains, agentMetrics, selectedIncident, onIncidentChange, onJWClick }) {
+  const svgRef = useRef(null)
+  const wrapRef = useRef(null)
+  const simRef = useRef(null)
+  const [tooltip, setTooltip] = useState(null)
   const [showLabels, setShowLabels] = useState(true)
+  const onJWClickRef = useRef(onJWClick)
+  onJWClickRef.current = onJWClick
 
   const metricsMap = {}
   agentMetrics?.agents?.forEach(a => { metricsMap[a.agent_id] = a })
@@ -51,7 +53,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       return { source, target, count }
     })
 
-    const originId   = incident.origin_agent
+    const originId = incident.origin_agent
     const terminalId = JOHN_WINDWARD
 
     // Clamp nodes inside bounds
@@ -59,28 +61,40 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
     const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val))
 
     const simulation = d3.forceSimulation(nodes)
-      .force('link',      d3.forceLink(links).id(d => d.id).distance(70).strength(0.5))
-      .force('charge',    d3.forceManyBody().strength(-280))
-      .force('center',    d3.forceCenter(W / 2, H / 2))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(70).strength(0.5))
+      .force('charge', d3.forceManyBody().strength(-280))
+      .force('center', d3.forceCenter(W / 2, H / 2))
       .force('collision', d3.forceCollide(d => 10 + Math.sqrt(d.participation) * 1.8))
-      .force('x',         d3.forceX(W / 2).strength(0.04))
-      .force('y',         d3.forceY(H / 2).strength(0.04))
+      .force('x', d3.forceX(W / 2).strength(0.04))
+      .force('y', d3.forceY(H / 2).strength(0.04))
     simRef.current = simulation
 
+    // Arrow marker lives on svg (not g) so it doesn't scale with zoom
     const defs = svg.append('defs')
     defs.append('marker').attr('id', `arrow-${selectedIncident}`)
       .attr('viewBox', '0 -5 10 10').attr('refX', 18).attr('refY', 0)
       .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
       .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#a69e91')
 
-    const linkEl = svg.append('g').selectAll('line')
+    // Zoom — map-style: wheel zooms to cursor, drag pans, dblclick resets
+    const g = svg.append('g')
+    const zoom = d3.zoom()
+      .scaleExtent([0.2, 6])
+      .on('zoom', (event) => g.attr('transform', event.transform))
+    svg.call(zoom)
+      .on('dblclick.zoom', () =>
+        svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity)
+      )
+
+    const linkEl = g.append('g').selectAll('line')
       .data(links).join('line')
-      .attr('stroke', '#e8e1d4')
-      .attr('stroke-width', d => Math.max(1, Math.sqrt(d.count) * 1.4))
-      .attr('opacity', 0.6)
+      .attr('stroke', INCIDENT_COLOR[selectedIncident])
+      .attr('stroke-width', d => Math.max(1, Math.sqrt(d.count) * 0.7))
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('opacity', 0.85)
       .attr('marker-end', `url(#arrow-${selectedIncident})`)
 
-    const nodeEl = svg.append('g').selectAll('g')
+    const nodeEl = g.append('g').selectAll('g')
       .data(nodes).join('g')
       .style('cursor', 'pointer')
       .call(d3.drag()
@@ -89,7 +103,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
           d.fx = d.x; d.fy = d.y
         })
         .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y })
-        .on('end',  (event, d) => {
+        .on('end', (event, d) => {
           if (!event.active) simulation.alphaTarget(0)
           d.fx = null; d.fy = null
         })
@@ -100,8 +114,8 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       .attr('fill', d => DEPT_COLOR(d.dept))
       .attr('stroke', d => {
         if (d.id === terminalId) return '#e63946'
-        if (d.id === originId)   return '#5f8a4e'
-        if (d.is_c2)             return '#8a6aa6'
+        if (d.id === originId) return '#5f8a4e'
+        if (d.is_c2) return '#8a6aa6'
         return '#fdfbf7'
       })
       .attr('stroke-width', d => (d.id === terminalId || d.id === originId || d.is_c2) ? 2.5 : 1.5)
@@ -125,6 +139,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
       .attr('visibility', showLabels ? 'visible' : 'hidden')
 
     nodeEl
+      .on('click', (event, d) => { if (d.id === terminalId) onJWClickRef.current?.() })
       .on('mousemove', (event, d) => {
         setTooltip({
           x: event.clientX, y: event.clientY,
@@ -133,6 +148,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
               <div className="font-semibold text-slate-800">{d.label}</div>
               <div className="text-slate-600 text-xs">{deptLabel(d.dept)}</div>
               {d.is_c2 && <div className="text-violet-600 text-xs font-semibold mt-1">C2 Agent</div>}
+              {d.id === terminalId && <div className="text-red-600 text-xs mt-1">Terminal Agent · click to inspect</div>}
               <div className="text-slate-600 text-xs mt-1">Participation: {d.participation} events</div>
             </div>
           )
@@ -196,7 +212,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
           ))}
         </div>
         <button onClick={() => setShowLabels(l => !l)} className="chip">
-          {showLabels ? 'hide labels' : 'show labels'}
+          {showLabels ? 'Hide labels' : 'Show labels'}
         </button>
       </div>
 
@@ -219,7 +235,7 @@ export default function PropagationNetwork({ chains, agentMetrics, selectedIncid
           ...DEPT_IDS.map(id => ({ dot: true, color: DEPT_COLOR(id), label: DEPT_LABELS[id] }))
         ].map((l, i) => (
           <div key={i} className="legend-item">
-            {l.dot  && <span className="legend-dot"  style={{ background: l.color }} />}
+            {l.dot && <span className="legend-dot" style={{ background: l.color }} />}
             {l.ring && <span className="legend-ring" style={{ color: l.color }} />}
             {l.label}
           </div>

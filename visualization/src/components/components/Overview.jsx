@@ -14,8 +14,8 @@ const FILTERS = [
 function baseEdgeColor(edge) {
   if (edge.in_all_incidents) return '#e63946'
   if (edge.incidents_count >= 2) return '#c77d3a'
-  if (edge.incidents_count === 1) return '#e0aa6e'
-  return '#e7e1d6'
+  if (edge.incidents_count === 1) return '#c9943a'
+  return '#8c8279'
 }
 
 function edgeMatchesFilter(edge, filter) {
@@ -24,13 +24,17 @@ function edgeMatchesFilter(edge, filter) {
   return edge[`${filter}_count`] > 0
 }
 
-export default function SystemOverview({ interventionEdges, agentMetrics }) {
+export default function Overview({ interventionEdges, agentMetrics, filter: filterProp, onFilterChange, onJWClick }) {
   const svgRef = useRef(null)
   const wrapRef = useRef(null)
   const simRef = useRef(null)
   const linkElRef = useRef(null)
   const [tooltip, setTooltip] = useState(null)
-  const [filter, setFilter] = useState('all')
+  const [filterInternal, setFilterInternal] = useState('all')
+  const filter = filterProp !== undefined ? filterProp : filterInternal
+  const setFilter = filterProp !== undefined ? onFilterChange : setFilterInternal
+  const onJWClickRef = useRef(onJWClick)
+  onJWClickRef.current = onJWClick
 
   const metricsMap = {}
   agentMetrics?.agents?.forEach(a => { metricsMap[a.agent_id] = a })
@@ -69,11 +73,22 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
       .force('collision', d3.forceCollide(d => 6 + Math.sqrt(d.total || 1) * 1.5))
     simRef.current = simulation
 
-    const linkEl = svg.append('g').selectAll('line')
+    // Zoom — all content lives inside g so transform applies uniformly
+    const g = svg.append('g')
+    const zoom = d3.zoom()
+      .scaleExtent([0.2, 6])
+      .on('zoom', (event) => g.attr('transform', event.transform))
+    svg.call(zoom)
+      .on('dblclick.zoom', () =>
+        svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity)
+      )
+
+    const linkEl = g.append('g').selectAll('line')
       .data(links).join('line')
       .attr('stroke', d => baseEdgeColor(d))
-      .attr('stroke-width', d => Math.max(0.5, Math.sqrt(d.total_all || 1) * 0.5))
-      .attr('opacity', d => d.total_anomalous > 0 ? 0.7 : 0.25)
+      .attr('stroke-width', d => Math.max(1, Math.sqrt(d.total_all || 1) * 0.7))
+      .attr('vector-effect', 'non-scaling-stroke')
+      .attr('opacity', d => d.total_anomalous > 0 ? 0.85 : 0.7)
       .style('cursor', 'pointer')
       .on('mousemove', (event, d) => {
         setTooltip({
@@ -98,7 +113,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
 
     linkElRef.current = linkEl
 
-    const nodeEl = svg.append('g').selectAll('g')
+    const nodeEl = g.append('g').selectAll('g')
       .data(nodes).join('g')
       .style('cursor', 'pointer')
       .call(d3.drag()
@@ -120,6 +135,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
       .attr('stroke-width', d => (d.is_terminal || d.is_c2) ? 2.5 : 1)
 
     nodeEl
+      .on('click', (event, d) => { if (d.is_terminal) onJWClickRef.current?.() })
       .on('mousemove', (event, d) => {
         setTooltip({
           x: event.clientX, y: event.clientY,
@@ -128,7 +144,7 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
               <div className="font-semibold text-slate-800">{d.label}</div>
               <div className="text-slate-600 text-xs">{deptLabel(d.dept)}</div>
               {d.is_c2 && <div className="text-violet-600 text-xs">C2 Agent</div>}
-              {d.is_terminal && <div className="text-red-600 text-xs">Terminal Agent</div>}
+              {d.is_terminal && <div className="text-red-600 text-xs">Terminal Agent · click to inspect</div>}
               <div className="text-slate-500 text-xs mt-1">Total activity: {d.total}</div>
             </div>
           )
@@ -152,18 +168,18 @@ export default function SystemOverview({ interventionEdges, agentMetrics }) {
     if (!linkEl) return
 
     linkEl
-      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#efeae0')
+      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#d4cdc5')
       .attr('opacity', d => {
-        if (!edgeMatchesFilter(d, filter)) return 0.08
+        if (!edgeMatchesFilter(d, filter)) return 0.15
         return filter === 'all'
-          ? (d.total_anomalous > 0 ? 0.7 : 0.25)
-          : 0.85
+          ? (d.total_anomalous > 0 ? 0.85 : 0.7)
+          : 0.9
       })
       .attr('stroke-width', d => {
         if (!edgeMatchesFilter(d, filter)) return 0.5
         return filter === 'all'
-          ? Math.max(0.5, Math.sqrt(d.total_all || 1) * 0.5)
-          : Math.max(1, Math.sqrt(d.total_all || 1) * 0.8)
+          ? Math.max(1, Math.sqrt(d.total_all || 1) * 0.7)
+          : Math.max(1.5, Math.sqrt(d.total_all || 1) * 1)
       })
   }, [filter])
 
