@@ -77,8 +77,6 @@ info/
 
 ---
 
----
-
 ## Workflow
 
 ### 1. Explore
