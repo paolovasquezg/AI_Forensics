@@ -8,6 +8,9 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
+  server: {
+    allowedHosts: ['t-shirt-silver-unshaven.ngrok-free.dev']
+  },
   plugins: [
     tailwindcss(),
     react(),
