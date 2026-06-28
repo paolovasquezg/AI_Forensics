@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from './Tooltip'
-import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../constants'
+import { INCIDENT_COLOR, INCIDENT_NAMES, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../constants'
 
 const FILTERS = [
   { key: 'all', label: 'All', color: '#7d766b' },
@@ -29,12 +29,18 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
   const wrapRef = useRef(null)
   const simRef = useRef(null)
   const linkElRef = useRef(null)
+  const nodeElRef = useRef(null)
+  const maxDegRef = useRef(1)
+  const filterRef = useRef('all')
+  const selectedRef = useRef(null)
+  const restyleRef = useRef(null)
   const [tooltip, setTooltip] = useState(null)
   const [filterInternal, setFilterInternal] = useState('all')
   const filter = filterProp !== undefined ? filterProp : filterInternal
   const setFilter = filterProp !== undefined ? onFilterChange : setFilterInternal
   const onJWClickRef = useRef(onJWClick)
   onJWClickRef.current = onJWClick
+  filterRef.current = filter
 
   const metricsMap = {}
   agentMetrics?.agents?.forEach(a => { metricsMap[a.agent_id] = a })
@@ -66,11 +72,31 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
 
     const links = interventionEdges.edges.map(e => ({ ...e, source: e.from, target: e.to }))
 
+    // ── Degree / aristas relacionadas por nodo (global y por incidente) ──
+    const nodeById = new Map(nodes.map(n => [n.id, n]))
+    nodes.forEach(n => {
+      n.degree = 0
+      n.incDeg = { normal: 0 }
+      INCIDENT_NAMES.forEach(inc => { n.incDeg[inc] = 0 })
+    })
+    interventionEdges.edges.forEach(e => {
+      const ends = [nodeById.get(e.from), nodeById.get(e.to)]
+      ends.forEach(n => {
+        if (!n) return
+        n.degree += 1
+        if (e.total_anomalous === 0) n.incDeg.normal += 1
+        INCIDENT_NAMES.forEach(inc => { if ((e[`${inc}_count`] || 0) > 0) n.incDeg[inc] += 1 })
+      })
+    })
+    const maxDeg = d3.max(nodes, n => n.degree) || 1
+    maxDegRef.current = maxDeg
+
     const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(60).strength(0.2))
-      .force('charge', d3.forceManyBody().strength(-180))
-      .force('center', d3.forceCenter(W / 2, H / 2))
-      .force('collision', d3.forceCollide(d => 6 + Math.sqrt(d.total || 1) * 1.5))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(95).strength(0.12))
+      .force('charge', d3.forceManyBody().strength(-460).distanceMax(Math.max(W, H) * 0.9))
+      .force('x', d3.forceX(W / 2).strength(0.03))
+      .force('y', d3.forceY(H / 2).strength(0.055))
+      .force('collision', d3.forceCollide(d => 11 + Math.sqrt(d.total || 1) * 1.8).iterations(2))
     simRef.current = simulation
 
     // Zoom — all content lives inside g so transform applies uniformly
@@ -129,13 +155,22 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
       )
 
     nodeEl.append('circle')
+      .attr('class', 'ov-node-circle')
       .attr('r', d => 4 + Math.sqrt(d.total || 1) * 1.2)
       .attr('fill', d => DEPT_COLOR(d.dept))
+      .attr('fill-opacity', d => 0.4 + 0.6 * Math.sqrt((d.degree || 0) / maxDeg))
       .attr('stroke', d => d.is_terminal ? '#e63946' : d.is_c2 ? '#8a6aa6' : '#fdfbf7')
       .attr('stroke-width', d => (d.is_terminal || d.is_c2) ? 2.5 : 1)
 
+    nodeElRef.current = nodeEl
+
     nodeEl
-      .on('click', (event, d) => { if (d.is_terminal) onJWClickRef.current?.() })
+      .on('click', (event, d) => {
+        event.stopPropagation()
+        selectedRef.current = (selectedRef.current === d.id) ? null : d.id
+        restyleRef.current?.()
+        if (d.is_terminal) onJWClickRef.current?.()
+      })
       .on('mousemove', (event, d) => {
         setTooltip({
           x: event.clientX, y: event.clientY,
@@ -152,6 +187,73 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
       })
       .on('mouseleave', () => setTooltip(null))
 
+    // ── Unified styling: incident filter + node-selection highlight ──
+    const eid = e => (e && e.id != null) ? e.id : e
+    restyleRef.current = function restyle() {
+      const lk = linkElRef.current, nd = nodeElRef.current
+      if (!lk || !nd) return
+      const f = filterRef.current
+      const sel = selectedRef.current
+      const md = maxDegRef.current || 1
+      const isIncident = INCIDENT_NAMES.includes(f)
+
+      // neighbours of the selected node
+      let neigh = null
+      if (sel) {
+        neigh = new Set([sel])
+        lk.each(d => {
+          const s = eid(d.source), t = eid(d.target)
+          if (s === sel) neigh.add(t)
+          else if (t === sel) neigh.add(s)
+        })
+      }
+
+      const relDeg = d => f === 'all' ? d.degree : f === 'normal' ? (d.incDeg?.normal || 0) : (d.incDeg?.[f] || 0)
+      const degOpacity = d => 0.4 + 0.6 * Math.sqrt((d.degree || 0) / md)
+
+      lk
+        .attr('stroke', d => {
+          if (sel) { const s = eid(d.source), t = eid(d.target); return (s === sel || t === sel) ? baseEdgeColor(d) : '#d4cdc5' }
+          return edgeMatchesFilter(d, f) ? baseEdgeColor(d) : '#d4cdc5'
+        })
+        .attr('opacity', d => {
+          if (sel) { const s = eid(d.source), t = eid(d.target); return (s === sel || t === sel) ? 0.95 : 0.05 }
+          if (!edgeMatchesFilter(d, f)) return 0.15
+          return f === 'all' ? (d.total_anomalous > 0 ? 0.85 : 0.7) : 0.9
+        })
+        .attr('stroke-width', d => {
+          if (sel) { const s = eid(d.source), t = eid(d.target); return (s === sel || t === sel) ? Math.max(1.5, Math.sqrt(d.total_all || 1) * 1.1) : 0.5 }
+          if (!edgeMatchesFilter(d, f)) return 0.5
+          return f === 'all' ? Math.max(1, Math.sqrt(d.total_all || 1) * 0.7) : Math.max(1.5, Math.sqrt(d.total_all || 1) * 1)
+        })
+
+      nd.select('.ov-node-circle')
+        .attr('fill', d => {
+          const base = DEPT_COLOR(d.dept)
+          if (sel) return d.id === sel ? d3.color(base).darker(0.9).formatHex() : base
+          if (isIncident && relDeg(d) > 0) return d3.color(base).darker(0.7).formatHex()
+          return base
+        })
+        .attr('fill-opacity', d => {
+          if (sel) return neigh.has(d.id) ? 1 : 0.08
+          if (!isIncident) return degOpacity(d)
+          return relDeg(d) > 0 ? 1 : 0.18
+        })
+        .attr('stroke-opacity', d => {
+          if (sel) return neigh.has(d.id) ? 1 : 0.12
+          if (!isIncident) return 1
+          return relDeg(d) > 0 ? 1 : 0.25
+        })
+    }
+
+    // Click on empty canvas clears the node selection
+    svg.on('click.deselect', () => {
+      if (selectedRef.current != null) { selectedRef.current = null; restyleRef.current?.() }
+    })
+
+    selectedRef.current = null      // reset selection on (re)build
+    restyleRef.current()            // initial paint
+
     simulation.on('tick', () => {
       linkEl
         .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
@@ -162,25 +264,11 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
     return () => simulation.stop()
   }, [interventionEdges, agentMetrics])
 
-  // Update edge visuals whenever filter changes — no simulation restart
+  // Restyle whenever the filter changes (clears any node selection)
   useEffect(() => {
-    const linkEl = linkElRef.current
-    if (!linkEl) return
-
-    linkEl
-      .attr('stroke', d => edgeMatchesFilter(d, filter) ? baseEdgeColor(d) : '#d4cdc5')
-      .attr('opacity', d => {
-        if (!edgeMatchesFilter(d, filter)) return 0.15
-        return filter === 'all'
-          ? (d.total_anomalous > 0 ? 0.85 : 0.7)
-          : 0.9
-      })
-      .attr('stroke-width', d => {
-        if (!edgeMatchesFilter(d, filter)) return 0.5
-        return filter === 'all'
-          ? Math.max(1, Math.sqrt(d.total_all || 1) * 0.7)
-          : Math.max(1.5, Math.sqrt(d.total_all || 1) * 1)
-      })
+    filterRef.current = filter
+    selectedRef.current = null
+    restyleRef.current?.()
   }, [filter])
 
   return (

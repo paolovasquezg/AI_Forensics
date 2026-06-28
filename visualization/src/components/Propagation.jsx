@@ -61,7 +61,7 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
     const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val))
 
     const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(70).strength(0.5))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(84).strength(0.5))
       .force('charge', d3.forceManyBody().strength(-280))
       .force('center', d3.forceCenter(W / 2, H / 2))
       .force('collision', d3.forceCollide(d => 10 + Math.sqrt(d.participation) * 1.8))
@@ -72,9 +72,10 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
     // Arrow marker lives on svg (not g) so it doesn't scale with zoom
     const defs = svg.append('defs')
     defs.append('marker').attr('id', `arrow-${selectedIncident}`)
-      .attr('viewBox', '0 -5 10 10').attr('refX', 18).attr('refY', 0)
-      .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
-      .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#a69e91')
+      .attr('viewBox', '0 -5 10 10').attr('refX', 9).attr('refY', 0)
+      .attr('markerWidth', 7).attr('markerHeight', 7).attr('orient', 'auto')
+      .attr('markerUnits', 'userSpaceOnUse')
+      .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', INCIDENT_COLOR[selectedIncident])
 
     // Zoom — map-style: wheel zooms to cursor, drag pans, dblclick resets
     const g = svg.append('g')
@@ -86,12 +87,13 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
         svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity)
       )
 
-    const linkEl = g.append('g').selectAll('line')
-      .data(links).join('line')
+    const linkEl = g.append('g').attr('fill', 'none').selectAll('path')
+      .data(links).join('path')
       .attr('stroke', INCIDENT_COLOR[selectedIncident])
       .attr('stroke-width', d => Math.max(1, Math.sqrt(d.count) * 0.7))
+      .attr('stroke-linecap', 'round')
       .attr('vector-effect', 'non-scaling-stroke')
-      .attr('opacity', 0.85)
+      .attr('opacity', 0.8)
       .attr('marker-end', `url(#arrow-${selectedIncident})`)
 
     const nodeEl = g.append('g').selectAll('g')
@@ -109,9 +111,12 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
         })
       )
 
+    const maxPart = d3.max(nodes, n => n.participation) || 1
+
     nodeEl.append('circle')
       .attr('r', d => 7 + Math.sqrt(d.participation) * 1.6)
       .attr('fill', d => DEPT_COLOR(d.dept))
+      .attr('fill-opacity', d => 0.45 + 0.55 * Math.sqrt(d.participation / maxPart))
       .attr('stroke', d => {
         if (d.id === terminalId) return '#e63946'
         if (d.id === originId) return '#5f8a4e'
@@ -156,15 +161,31 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
       })
       .on('mouseleave', () => setTooltip(null))
 
+    const nodeR = d => 7 + Math.sqrt(d.participation) * 1.6
+
     simulation.on('tick', () => {
       // Keep nodes inside bounds
       nodes.forEach(d => {
         d.x = clamp(d.x, PAD, W - PAD)
         d.y = clamp(d.y, PAD, H - PAD)
       })
-      linkEl
-        .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x).attr('y2', d => d.target.y)
+      // Curved (bundled) directional links: an arc from source → target,
+      // trimmed to each node's edge so the arrowhead lands cleanly.
+      linkEl.attr('d', d => {
+        const sx0 = d.source.x, sy0 = d.source.y
+        const tx0 = d.target.x, ty0 = d.target.y
+        let dx = tx0 - sx0, dy = ty0 - sy0
+        const dist = Math.hypot(dx, dy) || 1
+        const ux = dx / dist, uy = dy / dist
+        const sr = nodeR(d.source)
+        const tr = nodeR(d.target) + 7   // leave room for the arrowhead
+        const sx = sx0 + ux * sr
+        const sy = sy0 + uy * sr
+        const tx = tx0 - ux * tr
+        const ty = ty0 - uy * tr
+        const dr = dist * 1.6            // arc radius → gentle, consistent bundling curve
+        return `M${sx},${sy}A${dr},${dr} 0 0,1 ${tx},${ty}`
+      })
       nodeEl.attr('transform', d => `translate(${d.x},${d.y})`)
     })
   }, [chains, agentMetrics, selectedIncident, showLabels])

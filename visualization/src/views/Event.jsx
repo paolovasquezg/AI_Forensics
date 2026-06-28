@@ -8,6 +8,16 @@ const INCIDENTS = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
 export default function EventNetwork({ data, incident, onIncidentChange, filter, onFilterChange, onJwToggle, rightMode, onRightModeChange }) {
   const isIncidentFilter = INCIDENTS.includes(filter)
 
+  // When an incident is the active filter, the Event Network follows it so all
+  // three views (Event Network, Chain of Events, Employee Network) stay in sync.
+  const effectiveIncident = isIncidentFilter ? filter : incident
+
+  // Picking an incident here drives the shared filter too (syncs every graph).
+  const pickIncident = (n) => {
+    onIncidentChange(n)
+    onFilterChange(n)
+  }
+
   return (
     <div style={{ gridColumn: '2', gridRow: '1 / 3', display: 'flex', flexDirection: 'column', gap: 8, minHeight: 0, overflow: 'hidden' }}>
       {rightMode === 'network' ? (
@@ -21,8 +31,8 @@ export default function EventNetwork({ data, incident, onIncidentChange, filter,
               <Propagation
                 chains={data.chains}
                 agentMetrics={data.agentMetrics}
-                selectedIncident={incident}
-                onIncidentChange={onIncidentChange}
+                selectedIncident={effectiveIncident}
+                onIncidentChange={pickIncident}
                 onJWClick={onJwToggle}
               />
             </div>

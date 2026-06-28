@@ -607,29 +607,29 @@ body {
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 9px;
+  gap: 5px;
+  font-size: 11px;
   color: #7d766b;
   font-family: 'JetBrains Mono', monospace;
 }
 
 .legend-dot {
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 }
 
 .legend-dash {
-  width: 14px;
-  height: 2px;
+  width: 18px;
+  height: 3px;
   display: inline-block;
 }
 
 .legend-ring {
-  width: 9px;
-  height: 9px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  border: 1.5px solid currentColor;
+  border: 2px solid currentColor;
   background: transparent;
 }
 
