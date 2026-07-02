@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd visualization
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: visualization/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - visualization/node_modules/**/*
