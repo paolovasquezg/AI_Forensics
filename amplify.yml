@@ -5,6 +5,9 @@ frontend:
       commands:
         - cd visualization
         - npm ci
+        - mkdir -p public/data/transf
+        - cp ../data/graph.json public/data/graph.json
+        - cp ../data/transf/incident_chains.json ../data/transf/anomaly_labels.json ../data/transf/saidit_posts_annotated.json ../data/transf/c2_beacons.json ../data/transf/agent_propagation_metrics.json ../data/transf/intervention_edges.json ../data/transf/daily_aggregates.json public/data/transf/
     build:
       commands:
         - npm run build
