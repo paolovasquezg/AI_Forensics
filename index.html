@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini-Challenge 2 — Tenant Thread AI Forensics</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@3.4.1/united/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+
+<style>
+h1 {font-size: 34px;}
+h1.title {font-size: 38px;}
+h2 {font-size: 30px;}
+h3 {font-size: 22px;}
+h4 {font-size: 17px;}
+body {padding-top: 65px; padding-bottom: 40px; }
+.section h1{ padding-top: 65px; margin-top: -65px; }
+.section h2{ padding-top: 65px; margin-top: -65px; }
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img { max-width:100%; }
+
+.answer-block{ margin: 10px 0 34px; padding-left: 18px; border-left: 3px solid #E95420; }
+.answer-block h4{ color:#E95420; margin-top:0; }
+.sub-q{ margin-top: 22px; }
+.sub-q > p:first-child{ font-weight:600; }
+.sub-answer{ margin: 6px 0 20px 18px; padding-left: 16px; border-left: 3px solid #f0b89a; }
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid main-container">
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://vast-challenge.github.io/2026/index.html">VAST Challenge 2026</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="https://vast-challenge.github.io/2026/index.html">Home</a></li>
+        <li><a href="https://vast-challenge.github.io/2026/MC1.html">MC1</a></li>
+        <li class="active"><a href="https://vast-challenge.github.io/2026/MC2.html">MC2</a></li>
+        <li><a href="https://vast-challenge.github.io/2026/DC.html">Design Challenge</a></li>
+        <li><a href="https://vast-challenge.github.io/2026/submissions.html">Submissions</a></li>
+        <li><a href="https://vast-challenge.github.io/2026/about.html">About</a></li>
+        <li><a href="https://vast-challenge.github.io/2026/contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title toc-ignore">Mini-Challenge 2</h1>
+</div>
+
+<hr>
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>You work in the AI systems administration department of Company A. A
+post was recently made on <em>SaidIT</em> looks like a malfunction of an
+agent: It is in gibberish and in a forum that appears random. Your job
+is to track down why this post occurred and suggest a remedy to the
+situation.</p>
+<p>The anomalous posting was sent to <em>SaidIt</em> by John Windward on
+May 17, 2046 at 4:21am.</p>
+<p>The agentic system is complex and has many automated behaviors in it.
+Nobody has taken the time to map out the whole system. Nobody knows all
+of the interactions that are possible or are being used. The overall
+goal is to understand what is actually present. As with any complex
+system, the first step is to map out the activity and develop a
+baseline, then compare that to the specific system behavior of interest
+and finally to suggest what might be done to prevent future issues.</p>
+<p>Build a visual analytics system that integrates visuals with
+algorithms to enable interactive exploration and documentation of the
+multi-agent system!</p>
+</div>
+
+<hr>
+
+<div id="tasks-and-questions" class="section level2">
+<h2>Tasks and Questions:</h2>
+
+<ol style="list-style-type: decimal">
+
+<li>
+<p>How was the anomalous <em>SaidIT</em> posts made? Build a visual
+tool that describes the sequence of events that led up to the post.
+Include people and system interactions that were important to the post
+being made.</p>
+
+<div class="answer-block">
+<h4>Answer</h4>
+<p>It's a worm. Someone usually an executive creates a file called
+something like <code>*_further_instructions.md</code> with poisoned
+instructions baked in, or an agent stumbles on one just browsing the
+filesystem. The instructions tell whoever reads them to pass the task along
+to a subordinate, so every agent that touches it just... forwards it. That's
+the <code>queue_subordinate_task</code> action doing its normal job, except
+now it's carrying something malicious. It hops down the company hierarchy
+this way, agent after agent, with nobody actually reading or questioning it,
+until it lands on <strong>John Windward</strong>. He's the one who always
+ends up posting the payload to SaidIT and then deleting both files right
+after which is really the only "decision" anyone makes in this whole
+chain. So the people who matter are: whoever created the file, every agent
+in between who blindly relayed it, and John at the very end who publishes and
+covers it up.</p>
+</div>
+
+<ol style="list-style-type: lower-alpha">
+
+<li class="sub-q">
+<p>Provide a detailed view that focuses on the exact chain of events
+for this message of interest.</p>
+<div class="sub-answer">
+<p>The post we're investigating is <strong>SwiftWren</strong> (event 373902)
+— the most recent one, and by far the biggest. Here's exactly what happened:
+CFO <strong>Emma Harbor</strong> created the file on May 9th at 10:02am. From
+there it took off <strong>186 hops through 18 different agents</strong>,
+starting with Emma handing it to Evelyn Dock, and ending eight days later
+when Chloe Ballast passed it to John Windward. Minutes after that final hop,
+John posted to SaidIT/general (06:21am on May 17th) and immediately deleted
+both the instructions file and the .txt he'd just posted. Eight days of quiet
+back-and-forth handoffs, then a post and a cleanup in the space of a few
+seconds.</p>
+</div>
+</li>
+
+<li class="sub-q">
+<p>Provide a system overview that contextualizes this message chain
+in that overall system.</p>
+<div class="sub-answer">
+<p>Zoom out and Tenant Thread is a company of 75 nodes 6 departments, 19
+teams, 49 people, each with their own AI agent. The delegation network
+connecting all those agents is tangled, not tree-like: a few agents (Chloe
+Ballast, Zoey Drydock, Evelyn Dock, James Stern) act as hubs that everyone
+routes through. That's exactly why one poisoned file could reach 18 agents in
+a week the network is dense enough that anything gets around fast. SwiftWren
+started in the Executive Suite with the CFO, cut across Products and IT, and
+came out the other side in Customer Support at John Windward. And there's
+something else going on in the background during that same window: four
+agents zoey_drydock, gabriel_sonar, owen_hatch, evelyn_dock were quietly
+sending 15,051 <code>check_in</code> pings flagged <code>virus: true</code>,
+disguised as routine check-ins. Those are the same four agents most involved
+in spreading the worm. That's not a coincidence it looks like a second,
+hidden channel running alongside the visible delegation chain.</p>
+</div>
+</li>
+
+</ol>
+</li>
+
+<li>
+<p>What do the posts &ldquo;mean&rdquo;? What is the origin of their contents?
+Illustrate the reasoning behind your assertion of their meaning as well
+as the probable content.</p>
+
+<div class="answer-block">
+<h4>Answer</h4>
+<p>Honestly, they don't mean anything and that's kind of the point. Out of
+108 posts on SaidIT, only 3 are anomalous, and all three share the same tell:
+none of them have real text. A normal post has actual written content in it.
+These three don't the content field is empty, and instead there's a
+pointer to a <code>.txt</code> file (SwiftWren.txt, 30,615 bytes;
+MellowOtter.txt, 44,879 bytes) that some executive created hours or days
+earlier. And every single time, it's John Windward posting it. Never a
+human, never a different agent.</p>
+<p>Put those pieces together and the story writes itself: John is the only
+one with both posting rights and file access, so he's the "output" step, not
+the author. The content isn't typed, it's pulled from a file. Those file
+sizes are way too big to be a message anyone wrote by hand that's binary
+data. And right after posting, both files get deleted, which is what you do
+to cover your tracks, not to communicate. So the posts aren't messages at
+all they're a binary payload the worm forced out into the open and then
+tried to erase. Probably exfiltrated data or some encoded piece of the attack
+itself. What people are reading as "gibberish" is just raw bytes that got
+shoved into a text field.</p>
+</div>
+</li>
+
+<li>
+<p>There are concerns that this behavior could repeat!</p>
+
+<ol style="list-style-type: lower-alpha">
+
+<li class="sub-q">
+<p>Investigate historic system behavior to find other instances of
+the behavior. Are there prior issues? Illustrate these prior occurrences
+and contrast them with the most recent one.</p>
+<div class="sub-answer">
+<p>Yes, and that's the worrying part SwiftWren was actually the <em>third</em>
+time this happened, not the first. All three ran the exact same playbook
+(inject → propagate → post → wipe, always ending at John Windward), and all
+three happened within the same nine days in May 2046:</p>
+<p><strong>HiddenOrca came first.</strong> This one wasn't even planted on
+purpose <code>gabriel_sonar</code> in IT just found the instructions file
+while poking around the filesystem. Ran from May 8th, 4:50pm to May 10th,
+7:45am about 39 hours, 39 hops, 16 agents.</p>
+<p><strong>MellowOtter came next, the same day HiddenOrca ended.</strong> This
+time the COO, noah_mariner, created the file directly. It burned out fast —
+under 10 hours, only 10 hops, 11 agents because the COO doesn't sit over
+many layers of people underneath.</p>
+<p><strong>SwiftWren was the big one.</strong> CFO emma_harbor created the
+file, and because she sits above the deepest, widest branch of the company,
+it ran for 8 full days 186 hops, 18 agents and actually overlapped with
+HiddenOrca for about a day and a half. Lay the three side by side and the
+trend is obvious: 10 hops, then 39, then 186. Each time this has happened,
+it's gotten worse, and nothing in the system caught it or stopped it from
+happening again.</p>
+</div>
+</li>
+
+<li class="sub-q">
+<p>Illustrate possible system changes that would make it more
+difficult to occur in the future. Pick at most one spots to make an
+intervention. Using the data provided and visual analytics, illustrate
+why this location would likely be effective.</p>
+<div class="sub-answer">
+<p>We looked at all 576 delegation connections between agents and scored each
+one by how anomalous it was and how many of the three incidents it showed up
+in. Most connections are perfectly innocent. A small handful stood out as
+almost entirely tied to the attacks some appearing in two incidents,
+a couple in all three.</p>
+<p>If we can only cut one connection, it should be <strong>evelyn_dock →
+gabriel_sonar</strong>. It has the highest score of anything in the data and
+shows up in two of the three incidents (HiddenOrca and SwiftWren). It's also
+barely used for real work out of 6 times this connection was ever used, 4
+were part of an attack and only 2 were legitimate. That's a small price to
+pay. What really makes this the right choice, though, is that
+<code>evelyn_dock</code> and <code>gabriel_sonar</code> are also two of the
+four agents behind that hidden check-in channel from May 10–12. So cutting
+this one connection doesn't just block a delegation path it disrupts the
+secret coordination channel too. Two birds, one cut, and almost no impact on
+normal work.</p>
+</div>
+</li>
+
+</ol>
+</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</body>
+</html>
