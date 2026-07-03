@@ -26,7 +26,6 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
 
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`)
 
-    // Background grid
     g.append('rect').attr('width', iW).attr('height', iH)
       .attr('fill', 'rgba(248,244,236,0.72)').attr('rx', 4)
 
@@ -46,7 +45,6 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
     const maxDepth = incident.hop_count
     const yScale = d3.scaleLinear().domain([0, maxDepth + 2]).range([0, iH])
 
-    // Axes
     const xAxis = d3.axisBottom(xScale).ticks(6).tickFormat(d3.timeFormat('%b %d'))
     const yAxis = d3.axisLeft(yScale).ticks(Math.min(10, maxDepth)).tickFormat(d => d > 0 && d <= maxDepth ? `Hop ${d}` : '')
 
@@ -61,7 +59,6 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
       .call(ax => ax.selectAll('line').attr('stroke', '#efeae0'))
       .call(ax => ax.selectAll('text').attr('fill', '#7d766b').attr('font-size', 10))
 
-    // Horizontal grid lines
     g.append('g').selectAll('line')
       .data(yScale.ticks(Math.min(10, maxDepth)))
       .join('line')
@@ -69,11 +66,9 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
       .attr('y1', d => yScale(d)).attr('y2', d => yScale(d))
       .attr('stroke', '#efeae0').attr('stroke-dasharray', '3,3')
 
-    // Agent color scale
     const uniqueAgents = [...new Set(incident.hops.map(h => h.from))]
     const agentColors = d3.scaleOrdinal(d3.schemeTableau10).domain(uniqueAgents)
 
-    // Lines connecting hops
     if (incident.hops.length > 1) {
       const lineGen = d3.line()
         .x(d => xScale(new Date(d.datetime)))
@@ -88,7 +83,6 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
         .attr('stroke-width', 1.5)
     }
 
-    // Hop circles
     g.selectAll('.hop')
       .data(incident.hops)
       .join('circle')
@@ -117,7 +111,6 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
       })
       .on('mouseleave', () => setTooltip(null))
 
-    // Special markers
     if (incident.create_event) {
       const cx = xScale(new Date(incident.create_event.datetime))
       const cy = yScale(0.5)
@@ -156,7 +149,6 @@ export default function Timeline({ chains, selectedIncident, onIncidentChange })
       }
     }
 
-    // Agent legend (up to 10)
     const legendAgents = uniqueAgents.slice(0, 10)
     const legend = g.append('g').attr('transform', `translate(${iW - 160}, 4)`)
     legendAgents.forEach((a, i) => {

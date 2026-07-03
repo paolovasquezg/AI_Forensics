@@ -19,7 +19,6 @@ export default function JohnWindward({ agentMetrics }) {
     { sent_normal: 0, recv_normal: 0, anomaly_recv: 0, count: 0 }
   )
 
-  // Draw bar chart sized to whatever space the container gives
   const drawChart = useCallback(() => {
     if (!jw || !svgRef.current || !chartWrap.current || !avgMetrics?.count) return
     const avg = avgMetrics
@@ -44,13 +43,11 @@ export default function JohnWindward({ agentMetrics }) {
 
     const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`)
 
-    // subtle grid lines
     const maxVal = d3.max(metrics.flatMap(d => [d.jw, d.avg])) || 1
     const xScale = d3.scaleLinear().domain([0, maxVal]).range([0, iW]).nice()
     const yScale = d3.scaleBand().domain(metrics.map(d => d.label))
       .range([0, iH]).padding(0.35)
 
-    // grid verticals
     g.append('g').selectAll('line')
       .data(xScale.ticks(4))
       .join('line')
@@ -58,7 +55,6 @@ export default function JohnWindward({ agentMetrics }) {
       .attr('y1', 0).attr('y2', iH)
       .attr('stroke', '#efeae0').attr('stroke-width', 1)
 
-    // axes
     g.append('g').attr('transform', `translate(0,${iH})`)
       .call(d3.axisBottom(xScale).ticks(4))
       .call(ax => {
@@ -75,7 +71,6 @@ export default function JohnWindward({ agentMetrics }) {
 
     const row = g.selectAll('.row').data(metrics).join('g').attr('class', 'row')
 
-    // avg bar (behind)
     row.append('rect')
       .attr('y', d => (yScale(d.label) || 0) + yScale.bandwidth() * 0.46)
       .attr('height', yScale.bandwidth() * 0.44)
@@ -88,7 +83,6 @@ export default function JohnWindward({ agentMetrics }) {
       .attr('fill', '#a69e91').attr('font-size', 8)
       .text(d => `avg ${d.avg.toFixed(1)}`)
 
-    // JW bar (front)
     row.append('rect')
       .attr('y', d => yScale(d.label) || 0)
       .attr('height', yScale.bandwidth() * 0.44)
@@ -102,7 +96,6 @@ export default function JohnWindward({ agentMetrics }) {
       .attr('fill', '#4d4842').attr('font-size', 9).attr('font-weight', 'bold')
       .text(d => d.jw)
 
-    // mouseover on whole row
     row
       .on('mousemove', (event, d) => {
         setTooltip({
@@ -144,7 +137,6 @@ export default function JohnWindward({ agentMetrics }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, gap: 10, overflow: 'hidden' }}>
 
-      {/* ── Profile card ── */}
       <div style={{
         flexShrink: 0,
         background: 'linear-gradient(135deg, #fdfbf7 0%, #efeae0 100%)',
@@ -152,13 +144,10 @@ export default function JohnWindward({ agentMetrics }) {
         borderRadius: 10,
         overflow: 'hidden',
       }}>
-        {/* Red accent top bar */}
         <div style={{ height: 3, background: 'linear-gradient(to right, #e63946, #9b1320 60%, transparent)' }} />
 
         <div style={{ padding: '14px 16px' }}>
-          {/* Header row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-            {/* Avatar */}
             <div style={{
               width: 44, height: 44, borderRadius: '50%', flexShrink: 0,
               background: 'radial-gradient(circle at 35% 35%, rgba(230,57,70,0.25), rgba(230,57,70,0.06))',
@@ -167,13 +156,11 @@ export default function JohnWindward({ agentMetrics }) {
               boxShadow: '0 0 18px rgba(230,57,70,0.15)',
             }}>👤</div>
 
-            {/* Name + role */}
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 800, fontSize: 14, color: '#2b2823', letterSpacing: '-0.01em' }}>John Windward</div>
               <div style={{ fontSize: 10, color: '#7d766b', marginTop: 1 }}>Customer Support Lead</div>
             </div>
 
-            {/* Threat badge */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 5,
               padding: '4px 10px',
@@ -188,7 +175,6 @@ export default function JohnWindward({ agentMetrics }) {
             </div>
           </div>
 
-          {/* Stats — horizontal pills */}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             {stats.map(({ key, val, color }) => (
               <div key={key} style={{
@@ -206,7 +192,6 @@ export default function JohnWindward({ agentMetrics }) {
         </div>
       </div>
 
-      {/* ── Bar chart — fills all remaining space ── */}
       <div style={{
         flex: 1, minHeight: 0,
         background: '#fdfbf7',
@@ -214,7 +199,7 @@ export default function JohnWindward({ agentMetrics }) {
         borderRadius: 10, padding: '12px 12px 10px',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
       }}>
-        {/* Chart header */}
+
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, marginBottom: 6 }}>
           <div style={{ fontSize: 10, fontWeight: 700, color: '#a69e91', textTransform: 'uppercase', letterSpacing: '.09em', fontFamily: 'JetBrains Mono, monospace' }}>
             Activity vs System Average
@@ -229,7 +214,6 @@ export default function JohnWindward({ agentMetrics }) {
           </div>
         </div>
 
-        {/* SVG wrapper fills remaining height */}
         <div ref={chartWrap} style={{ flex: 1, minHeight: 0, position: 'relative' }}>
           <svg ref={svgRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
         </div>

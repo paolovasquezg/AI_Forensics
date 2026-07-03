@@ -20,7 +20,6 @@ export default function Intervention({ Interventions: interventionEdges }) {
     .filter(e => e.total_anomalous > 0)
     .sort((a, b) => b.intervention_score - a.intervention_score)[0]
 
-  // Stacked horizontal bar chart
   useEffect(() => {
     if (!top.length || !chartRef.current || !wrapRef.current) return
 
@@ -51,7 +50,6 @@ export default function Intervention({ Interventions: interventionEdges }) {
     const rowG = g.selectAll('.row')
       .data(top).join('g').attr('class', 'row')
 
-    // Agent label (left)
     rowG.append('text')
       .attr('x', -8)
       .attr('y', (_, i) => yScale(i) + yScale.bandwidth() / 2 + 4)
@@ -60,10 +58,10 @@ export default function Intervention({ Interventions: interventionEdges }) {
       .attr('font-size', 10)
       .text(d => `${agentLabel(d.from).split(' ')[0]} → ${agentLabel(d.to).split(' ')[0]}`)
 
-    // Stacked bars (one segment per incident)
+
     INCIDENTS.forEach(inc => {
       const key = `${inc}_count`
-      // compute x offsets for stacking
+
       rowG.each(function (d, i) {
         const prev = INCIDENTS.slice(0, INCIDENTS.indexOf(inc))
           .reduce((sum, p) => sum + (d[`${p}_count`] || 0), 0)
@@ -96,7 +94,6 @@ export default function Intervention({ Interventions: interventionEdges }) {
       })
     })
 
-    // "Safe to block" badge (right side)
     rowG.append('text')
       .attr('x', xScale(maxAnom) + 8)
       .attr('y', (_, i) => yScale(i) + yScale.bandwidth() / 2 + 4)
@@ -110,7 +107,6 @@ export default function Intervention({ Interventions: interventionEdges }) {
   return (
     <div className="space-y-3">
 
-      {/* Top recommendation card */}
       {best && (
         <div style={{ background: '#fdf2f0', border: '1px solid #f5cdc7', borderLeft: '2px solid #e63946', borderRadius: 6, padding: '7px 10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <div>
@@ -137,7 +133,6 @@ export default function Intervention({ Interventions: interventionEdges }) {
         </div>
       )}
 
-      {/* Stacked bar chart */}
       <div ref={wrapRef} style={{ background: '#fdfbf7', borderRadius: 6, border: '1px solid #e7e1d6', padding: '8px 10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
           <div style={{ fontSize: 9, fontWeight: 700, color: '#7d766b', fontFamily: 'JetBrains Mono,monospace', textTransform: 'uppercase', letterSpacing: '.08em' }}>Top 10 candidate edges</div>

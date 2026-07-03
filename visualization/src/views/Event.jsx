@@ -5,7 +5,7 @@ import Beacons from '../components/Beacons'
 
 const INCIDENTS = ['HiddenOrca', 'MellowOtter', 'SwiftWren']
 
-export default function EventNetwork({ data, incident, onIncidentChange, filter, onFilterChange, onJwToggle, rightMode, onRightModeChange }) {
+export default function EventNetwork({ data, incident, onIncidentChange, filter, onFilterChange, onJwToggle, rightMode, onRightModeChange, onBlockEdgeClick }) {
   const isIncidentFilter = INCIDENTS.includes(filter)
 
   // When an incident is the active filter, the Event Network follows it so all
@@ -34,6 +34,7 @@ export default function EventNetwork({ data, incident, onIncidentChange, filter,
                 selectedIncident={effectiveIncident}
                 onIncidentChange={pickIncident}
                 onJWClick={onJwToggle}
+                onBlockEdgeClick={onBlockEdgeClick}
               />
             </div>
           </div>

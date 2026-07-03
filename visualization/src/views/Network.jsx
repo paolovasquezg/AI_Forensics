@@ -8,6 +8,7 @@ export default function ViewNetwork({ data }) {
   const [filter, setFilter] = useState('all')
   const [jwSelected, setJwSelected] = useState(false)
   const [rightMode, setRightMode] = useState('network')
+  const goToAgents = () => setRightMode('agents')
 
   return (
     <div style={{
@@ -25,6 +26,7 @@ export default function ViewNetwork({ data }) {
         jwSelected={jwSelected}
         onJwToggle={() => setJwSelected(v => !v)}
         onJwDismiss={() => setJwSelected(false)}
+        onBlockEdgeClick={goToAgents}
       />
       <EventNetwork
         data={data}
@@ -35,6 +37,7 @@ export default function ViewNetwork({ data }) {
         onJwToggle={() => setJwSelected(v => !v)}
         rightMode={rightMode}
         onRightModeChange={setRightMode}
+        onBlockEdgeClick={goToAgents}
       />
       <BottomPanel
         data={data}

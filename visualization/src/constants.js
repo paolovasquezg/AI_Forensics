@@ -40,6 +40,22 @@ export const C2_AGENTS = [
 
 export const JOHN_WINDWARD = 'Agent/person:john_windward'
 
+export const RECOMMENDED_BLOCK_EDGE = {
+  from: 'Agent/person:evelyn_dock',
+  to: 'Agent/person:gabriel_sonar'
+}
+
+export const BLOCK_EDGE_COLOR = '#ff2d95'
+
+export const isRecommendedBlockEdge = (d) => {
+  if (!d) return false
+  const idOf = (v) => (v && typeof v === 'object') ? v.id : v
+  const a = idOf(d.from ?? d.source)
+  const b = idOf(d.to ?? d.target)
+  return (a === RECOMMENDED_BLOCK_EDGE.from && b === RECOMMENDED_BLOCK_EDGE.to) ||
+    (a === RECOMMENDED_BLOCK_EDGE.to && b === RECOMMENDED_BLOCK_EDGE.from)
+}
+
 export const agentLabel = (id) =>
   (id || '')
     .replace('Agent/person:', '')

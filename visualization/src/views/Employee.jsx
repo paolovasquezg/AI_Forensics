@@ -1,7 +1,7 @@
 import Overview from '../components/Overview'
 import JohnWindward from '../components/JohnWindward'
 
-export default function EmployeeNetwork({ data, filter, onFilterChange, jwSelected, onJwToggle, onJwDismiss }) {
+export default function EmployeeNetwork({ data, filter, onFilterChange, jwSelected, onJwToggle, onJwDismiss, onBlockEdgeClick }) {
   return (
     <div className="panel" style={{ gridColumn: '1', gridRow: '1' }}>
       <div className="panel-head">
@@ -18,6 +18,7 @@ export default function EmployeeNetwork({ data, filter, onFilterChange, jwSelect
             filter={filter}
             onFilterChange={onFilterChange}
             onJWClick={onJwToggle}
+            onBlockEdgeClick={onBlockEdgeClick}
           />
         </div>
         {jwSelected && (

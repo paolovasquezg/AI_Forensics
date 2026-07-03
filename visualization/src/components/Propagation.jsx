@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import * as d3 from 'd3'
 import Tooltip from './Tooltip'
-import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../constants'
+import { INCIDENT_COLOR, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel, isRecommendedBlockEdge, BLOCK_EDGE_COLOR } from '../constants'
 
-export default function Propagation({ chains, agentMetrics, selectedIncident, onIncidentChange, onJWClick }) {
+export default function Propagation({ chains, agentMetrics, selectedIncident, onIncidentChange, onJWClick, onBlockEdgeClick }) {
   const svgRef = useRef(null)
   const wrapRef = useRef(null)
   const simRef = useRef(null)
@@ -11,11 +11,14 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
   const [showLabels, setShowLabels] = useState(true)
   const onJWClickRef = useRef(onJWClick)
   onJWClickRef.current = onJWClick
+  const onBlockEdgeClickRef = useRef(onBlockEdgeClick)
+  onBlockEdgeClickRef.current = onBlockEdgeClick
 
   const metricsMap = {}
   agentMetrics?.agents?.forEach(a => { metricsMap[a.agent_id] = a })
 
-  // Core draw function — called after we know the container has real dimensions
+  const minUses = selectedIncident === 'SwiftWren' ? 2 : 1
+
   const draw = useCallback(() => {
     if (!chains || !agentMetrics || !svgRef.current || !wrapRef.current) return
     const incident = chains[selectedIncident]
@@ -23,14 +26,13 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
 
     const W = wrapRef.current.offsetWidth
     const H = wrapRef.current.offsetHeight
-    if (!W || !H) return   // container not yet laid out — bail, ResizeObserver will retry
+    if (!W || !H) return
 
     if (simRef.current) simRef.current.stop()
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
     svg.attr('width', W).attr('height', H)
 
-    // Build graph
     const nodeSet = new Set()
     const edgeMap = {}
     incident.hops.forEach(h => {
@@ -40,7 +42,19 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
       edgeMap[key] = (edgeMap[key] || 0) + 1
     })
 
-    const nodes = [...nodeSet].map(id => ({
+    const originId = incident.origin_agent
+    const terminalId = JOHN_WINDWARD
+    const links = Object.entries(edgeMap)
+      .map(([key, count]) => {
+        const [source, target] = key.split('|||')
+        return { source, target, count }
+      })
+      .filter(l => l.count >= minUses || [l.source, l.target].some(id => id === originId || id === terminalId))
+
+    const keepIds = new Set()
+    links.forEach(l => { keepIds.add(l.source); keepIds.add(l.target) })
+
+    const nodes = [...keepIds].map(id => ({
       id,
       label: agentLabel(id),
       dept: metricsMap[id]?.department || 'unknown',
@@ -48,15 +62,6 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
       participation: incident.hops.filter(h => h.from === id || h.to === id).length
     }))
 
-    const links = Object.entries(edgeMap).map(([key, count]) => {
-      const [source, target] = key.split('|||')
-      return { source, target, count }
-    })
-
-    const originId = incident.origin_agent
-    const terminalId = JOHN_WINDWARD
-
-    // Clamp nodes inside bounds
     const PAD = 30
     const clamp = (val, lo, hi) => Math.max(lo, Math.min(hi, val))
 
@@ -69,7 +74,6 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
       .force('y', d3.forceY(H / 2).strength(0.04))
     simRef.current = simulation
 
-    // Arrow marker lives on svg (not g) so it doesn't scale with zoom
     const defs = svg.append('defs')
     defs.append('marker').attr('id', `arrow-${selectedIncident}`)
       .attr('viewBox', '0 -5 10 10').attr('refX', 9).attr('refY', 0)
@@ -77,7 +81,13 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
       .attr('markerUnits', 'userSpaceOnUse')
       .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', INCIDENT_COLOR[selectedIncident])
 
-    // Zoom — map-style: wheel zooms to cursor, drag pans, dblclick resets
+    const glow = defs.append('filter').attr('id', 'block-edge-glow')
+      .attr('x', '-60%').attr('y', '-60%').attr('width', '220%').attr('height', '220%')
+    glow.append('feGaussianBlur').attr('stdDeviation', 3).attr('result', 'blur')
+    const glowMerge = glow.append('feMerge')
+    glowMerge.append('feMergeNode').attr('in', 'blur')
+    glowMerge.append('feMergeNode').attr('in', 'SourceGraphic')
+
     const g = svg.append('g')
     const zoom = d3.zoom()
       .scaleExtent([0.2, 6])
@@ -95,6 +105,29 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
       .attr('vector-effect', 'non-scaling-stroke')
       .attr('opacity', 0.8)
       .attr('marker-end', `url(#arrow-${selectedIncident})`)
+
+    linkEl.filter(isRecommendedBlockEdge)
+      .attr('stroke', BLOCK_EDGE_COLOR)
+      .attr('stroke-width', d => Math.max(4, Math.sqrt(d.count) * 0.9 + 2))
+      .attr('opacity', 1)
+      .attr('filter', 'url(#block-edge-glow)')
+      .style('cursor', 'pointer')
+      .on('mousemove', (event) => {
+        setTooltip({
+          x: event.clientX, y: event.clientY,
+          children: (
+            <div className="text-xs font-bold" style={{ color: BLOCK_EDGE_COLOR }}>
+              Edge to block
+            </div>
+          )
+        })
+      })
+      .on('mouseleave', () => setTooltip(null))
+      .on('click', (event) => {
+        event.stopPropagation()
+        onBlockEdgeClickRef.current?.()
+      })
+      .raise()
 
     const nodeEl = g.append('g').selectAll('g')
       .data(nodes).join('g')
@@ -164,13 +197,10 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
     const nodeR = d => 7 + Math.sqrt(d.participation) * 1.6
 
     simulation.on('tick', () => {
-      // Keep nodes inside bounds
       nodes.forEach(d => {
         d.x = clamp(d.x, PAD, W - PAD)
         d.y = clamp(d.y, PAD, H - PAD)
       })
-      // Curved (bundled) directional links: an arc from source → target,
-      // trimmed to each node's edge so the arrowhead lands cleanly.
       linkEl.attr('d', d => {
         const sx0 = d.source.x, sy0 = d.source.y
         const tx0 = d.target.x, ty0 = d.target.y
@@ -178,21 +208,19 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
         const dist = Math.hypot(dx, dy) || 1
         const ux = dx / dist, uy = dy / dist
         const sr = nodeR(d.source)
-        const tr = nodeR(d.target) + 7   // leave room for the arrowhead
+        const tr = nodeR(d.target) + 7
         const sx = sx0 + ux * sr
         const sy = sy0 + uy * sr
         const tx = tx0 - ux * tr
         const ty = ty0 - uy * tr
-        const dr = dist * 1.6            // arc radius → gentle, consistent bundling curve
+        const dr = dist * 1.6
         return `M${sx},${sy}A${dr},${dr} 0 0,1 ${tx},${ty}`
       })
       nodeEl.attr('transform', d => `translate(${d.x},${d.y})`)
     })
-  }, [chains, agentMetrics, selectedIncident, showLabels])
+  }, [chains, agentMetrics, selectedIncident, showLabels, minUses])
 
-  // Redraw when data/incident changes
   useEffect(() => {
-    // Small timeout so the panel has finished laying out before we read dimensions
     const t = setTimeout(draw, 50)
     return () => {
       clearTimeout(t)
@@ -200,7 +228,6 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
     }
   }, [draw])
 
-  // Also redraw when container resizes
   useEffect(() => {
     if (!wrapRef.current) return
     const ro = new ResizeObserver(() => draw())
@@ -208,7 +235,6 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
     return () => ro.disconnect()
   }, [draw])
 
-  // Toggle labels without full redraw
   useEffect(() => {
     if (!svgRef.current) return
     d3.select(svgRef.current).selectAll('.node-label')
@@ -218,7 +244,6 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 6, minHeight: 0 }}>
 
-      {/* Controls */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
         <div style={{ display: 'flex', gap: 5 }}>
           {['HiddenOrca', 'MellowOtter', 'SwiftWren'].map(n => (
@@ -237,7 +262,6 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
         </button>
       </div>
 
-      {/* SVG — fills remaining height */}
       <div ref={wrapRef} style={{
         flex: 1, minHeight: 0,
         borderRadius: 6, overflow: 'hidden',
@@ -247,12 +271,12 @@ export default function Propagation({ chains, agentMetrics, selectedIncident, on
         <svg ref={svgRef} style={{ width: '100%', height: '100%', display: 'block' }} />
       </div>
 
-      {/* Legend */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, flexShrink: 0 }}>
         {[
           { ring: true, color: '#5f8a4e', label: 'Origin' },
           { ring: true, color: '#e63946', label: 'Terminal' },
           { ring: true, color: '#8a6aa6', label: 'C2 agent' },
+          { dash: true, color: BLOCK_EDGE_COLOR, label: 'Recommended block' },
           ...DEPT_IDS.map(id => ({ dot: true, color: DEPT_COLOR(id), label: DEPT_LABELS[id] }))
         ].map((l, i) => (
           <div key={i} className="legend-item">

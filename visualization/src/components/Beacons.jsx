@@ -138,7 +138,6 @@ export default function Beacons({ Beacons }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 10, minHeight: 0 }}>
 
-      {/* Agent cards — compact 2×2 grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, flexShrink: 0 }}>
         {C2_AGENTS_ORDERED.map(agentId => {
           const s = summary[agentId]
@@ -178,7 +177,6 @@ export default function Beacons({ Beacons }) {
         })}
       </div>
 
-      {/* Legend */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', flexShrink: 0 }}>
         {C2_AGENTS_ORDERED.map(a => (
           <div key={a} className="legend-item">
@@ -188,7 +186,6 @@ export default function Beacons({ Beacons }) {
         ))}
       </div>
 
-      {/* Chart — fills remaining space */}
       <div style={{
         flex: 1, minHeight: 0,
         background: '#f8f4ec', border: '1px solid #e7e1d6',
@@ -203,7 +200,6 @@ export default function Beacons({ Beacons }) {
         </div>
       </div>
 
-      {/* Insight */}
       <div style={{
         flexShrink: 0, padding: '8px 12px',
         display: 'flex', justifyContent: "center",

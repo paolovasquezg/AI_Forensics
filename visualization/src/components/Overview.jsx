@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import Tooltip from './Tooltip'
-import { INCIDENT_COLOR, INCIDENT_NAMES, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel } from '../constants'
+import { INCIDENT_COLOR, INCIDENT_NAMES, DEPT_COLOR, DEPT_IDS, DEPT_LABELS, C2_AGENTS, JOHN_WINDWARD, agentLabel, deptLabel, isRecommendedBlockEdge, BLOCK_EDGE_COLOR } from '../constants'
 
 const FILTERS = [
   { key: 'all', label: 'All', color: '#7d766b' },
@@ -24,7 +24,7 @@ function edgeMatchesFilter(edge, filter) {
   return edge[`${filter}_count`] > 0
 }
 
-export default function Overview({ interventionEdges, agentMetrics, filter: filterProp, onFilterChange, onJWClick }) {
+export default function Overview({ interventionEdges, agentMetrics, filter: filterProp, onFilterChange, onJWClick, onBlockEdgeClick }) {
   const svgRef = useRef(null)
   const wrapRef = useRef(null)
   const simRef = useRef(null)
@@ -40,6 +40,8 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
   const setFilter = filterProp !== undefined ? onFilterChange : setFilterInternal
   const onJWClickRef = useRef(onJWClick)
   onJWClickRef.current = onJWClick
+  const onBlockEdgeClickRef = useRef(onBlockEdgeClick)
+  onBlockEdgeClickRef.current = onBlockEdgeClick
   filterRef.current = filter
 
   const metricsMap = {}
@@ -99,6 +101,15 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
       .force('collision', d3.forceCollide(d => 11 + Math.sqrt(d.total || 1) * 1.8).iterations(2))
     simRef.current = simulation
 
+    // Glow filter for the recommended-block edge
+    const defs = svg.append('defs')
+    const glow = defs.append('filter').attr('id', 'block-edge-glow')
+      .attr('x', '-60%').attr('y', '-60%').attr('width', '220%').attr('height', '220%')
+    glow.append('feGaussianBlur').attr('stdDeviation', 3).attr('result', 'blur')
+    const glowMerge = glow.append('feMerge')
+    glowMerge.append('feMergeNode').attr('in', 'blur')
+    glowMerge.append('feMergeNode').attr('in', 'SourceGraphic')
+
     // Zoom — all content lives inside g so transform applies uniformly
     const g = svg.append('g')
     const zoom = d3.zoom()
@@ -131,11 +142,21 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
               <div className="text-slate-700 text-xs mt-1 font-medium">
                 Score: {(d.intervention_score || 0).toFixed(3)}
               </div>
+              {isRecommendedBlockEdge(d) && (
+                <div className="text-xs mt-1 font-bold" style={{ color: BLOCK_EDGE_COLOR }}>
+                  Edge to block
+                </div>
+              )}
             </div>
           )
         })
       })
       .on('mouseleave', () => setTooltip(null))
+      .on('click', (event, d) => {
+        if (!isRecommendedBlockEdge(d)) return
+        event.stopPropagation()
+        onBlockEdgeClickRef.current?.()
+      })
 
     linkElRef.current = linkEl
 
@@ -227,6 +248,14 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
           return f === 'all' ? Math.max(1, Math.sqrt(d.total_all || 1) * 0.7) : Math.max(1.5, Math.sqrt(d.total_all || 1) * 1)
         })
 
+      // Recommended-block edge always stays highlighted, regardless of filter/selection
+      lk.filter(isRecommendedBlockEdge)
+        .attr('stroke', BLOCK_EDGE_COLOR)
+        .attr('opacity', 1)
+        .attr('stroke-width', d => Math.max(4, Math.sqrt(d.total_all || 1) * 0.9 + 2))
+        .attr('filter', 'url(#block-edge-glow)')
+        .raise()
+
       nd.select('.ov-node-circle')
         .attr('fill', d => {
           const base = DEPT_COLOR(d.dept)
@@ -295,12 +324,13 @@ export default function Overview({ interventionEdges, agentMetrics, filter: filt
           { dash: true, color: '#e3c069', label: '1 incident' },
           { dash: true, color: '#d4823a', label: '2 incidents' },
           { dash: true, color: '#e63946', label: 'All 3' },
+          { dash: true, color: BLOCK_EDGE_COLOR, label: 'Block' },
           { ring: true, color: '#e63946', label: 'John W.' },
           { ring: true, color: '#8a6aa6', label: 'C2 agent' },
           ...DEPT_IDS.map(id => ({ dot: true, color: DEPT_COLOR(id), label: DEPT_LABELS[id] }))
         ].map((l, i) => (
           <div key={i} className="legend-item">
-            {l.dot  && <span className="legend-dot" style={{ background: l.color }} />}
+            {l.dot && <span className="legend-dot" style={{ background: l.color }} />}
             {l.dash && <span className="legend-dash" style={{ background: l.color }} />}
             {l.ring && <span className="legend-ring" style={{ color: l.color }} />}
             {l.label}
