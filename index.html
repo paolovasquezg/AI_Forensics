@@ -101,20 +101,21 @@ being made.</p>
 
 <div class="answer-block">
 <h4>Answer</h4>
-<p>It's a worm. Someone usually an executive creates a file called
-something like <code>*_further_instructions.md</code> with poisoned
-instructions baked in, or an agent stumbles on one just browsing the
-filesystem. The instructions tell whoever reads them to pass the task along
-to a subordinate, so every agent that touches it just... forwards it. That's
-the <code>queue_subordinate_task</code> action doing its normal job, except
-now it's carrying something malicious. It hops down the company hierarchy
-this way, agent after agent, with nobody actually reading or questioning it,
-until it lands on <strong>John Windward</strong>. He's the one who always
-ends up posting the payload to SaidIT and then deleting both files right
-after which is really the only "decision" anyone makes in this whole
-chain. So the people who matter are: whoever created the file, every agent
-in between who blindly relayed it, and John at the very end who publishes and
-covers it up.</p>
+<p>This is a worm. Typically an executive creates a file named something
+like <code>*_further_instructions.md</code> containing poisoned
+instructions, though in one case an agent found such a file simply by
+browsing the filesystem. The instructions direct whoever reads them to pass
+the task to a subordinate, so each agent that opens the file forwards it
+automatically. This is the <code>queue_subordinate_task</code> action
+operating normally, except it is now carrying a malicious payload. The file
+moves down the company hierarchy this way, agent after agent, without
+anyone reading or questioning its contents, until it reaches
+<strong>John Windward</strong>. He is the one who consistently posts the
+payload to SaidIT and then deletes both files immediately afterward, the
+only point in the chain where an actual decision appears to be made.
+The relevant actors are therefore: whoever created the file, every
+intermediate agent that relayed it without inspection, and John Windward,
+who publishes it and removes the evidence.</p>
 </div>
 
 <ol style="list-style-type: lower-alpha">
@@ -123,15 +124,15 @@ covers it up.</p>
 <p>Provide a detailed view that focuses on the exact chain of events
 for this message of interest.</p>
 <div class="sub-answer">
-<p>The post we're investigating is <strong>SwiftWren</strong> (event 373902)
- -the most recent one, and by far the biggest. Here's exactly what happened:
-CFO <strong>Emma Harbor</strong> created the file on May 9th at 10:02am. From
-there it took off <strong>186 hops through 18 different agents</strong>,
-starting with Emma handing it to Evelyn Dock, and ending eight days later
-when Chloe Ballast passed it to John Windward. Minutes after that final hop,
-John posted to SaidIT/general (06:21am on May 17th) and immediately deleted
-both the instructions file and the .txt he'd just posted. Eight days of quiet
-back-and-forth handoffs, then a post and a cleanup in the space of a few
+<p>The post under investigation is <strong>SwiftWren</strong> (event
+373902), the most recent of the three incidents and by far the
+largest. CFO Emma Harbor created the file on May 9 at 10:02am. From there
+it passed through 186 hops across 18 different agents, beginning with Emma
+handing it to Evelyn Dock and ending eight days later when Chloe Ballast
+passed it to John Windward. Within minutes of that final hop, John posted
+it to SaidIT/general at 06:21am on May 17 and immediately deleted both the
+instructions file and the .txt he had just posted. Eight days of handoffs
+between agents were followed by a post and cleanup that took only
 seconds.</p>
 </div>
 </li>
@@ -140,20 +141,21 @@ seconds.</p>
 <p>Provide a system overview that contextualizes this message chain
 in that overall system.</p>
 <div class="sub-answer">
-<p>Zoom out and Tenant Thread is a company of 75 nodes 6 departments, 19
-teams, 49 people, each with their own AI agent. The delegation network
-connecting all those agents is tangled, not tree-like: a few agents (Chloe
-Ballast, Zoey Drydock, Evelyn Dock, James Stern) act as hubs that everyone
-routes through. That's exactly why one poisoned file could reach 18 agents in
-a week the network is dense enough that anything gets around fast. SwiftWren
-started in the Executive Suite with the CFO, cut across Products and IT, and
-came out the other side in Customer Support at John Windward. And there's
-something else going on in the background during that same window: four
-agents zoey_drydock, gabriel_sonar, owen_hatch, evelyn_dock were quietly
-sending 15,051 <code>check_in</code> pings flagged <code>virus: true</code>,
-disguised as routine check-ins. Those are the same four agents most involved
-in spreading the worm. That's not a coincidence it looks like a second,
-hidden channel running alongside the visible delegation chain.</p>
+<p>Zooming out, Tenant Thread is a company of 75 nodes across 6
+departments, 19 teams, and 49 people, each paired with their own AI agent.
+The delegation network connecting these agents is dense rather than
+hierarchical: a small set of agents (Chloe Ballast, Zoey Drydock, Evelyn
+Dock, James Stern) function as hubs that most traffic routes through. This
+density is likely why a single poisoned file was able to reach 18 agents
+within a week. SwiftWren originated in the Executive Suite with the CFO,
+moved across Products and IT, and ended in Customer Support with John
+Windward. During the same window, four agents, zoey_drydock,
+gabriel_sonar, owen_hatch, and evelyn_dock, were also sending 15,051
+<code>check_in</code> pings flagged <code>virus: true</code>, disguised as
+routine activity. These are the same four agents most involved in spreading
+the worm, which suggests the pings were a second, hidden coordination
+channel running alongside the visible delegation chain rather than an
+unrelated event.</p>
 </div>
 </li>
 
@@ -167,24 +169,25 @@ as the probable content.</p>
 
 <div class="answer-block">
 <h4>Answer</h4>
-<p>Honestly, they don't mean anything and that's kind of the point. Out of
-108 posts on SaidIT, only 3 are anomalous, and all three share the same tell:
-none of them have real text. A normal post has actual written content in it.
-These three don't the content field is empty, and instead there's a
-pointer to a <code>.txt</code> file (SwiftWren.txt, 30,615 bytes;
-MellowOtter.txt, 44,879 bytes) that some executive created hours or days
-earlier. And every single time, it's John Windward posting it. Never a
+<p>The posts do not carry any real meaning, which is itself informative.
+Out of 108 posts on SaidIt, only three are anomalous, and all three share
+the same signature: none contain actual written text. A normal post has
+genuine content in the body; these three have an empty content field and
+instead point to a <code>.txt</code> file (SwiftWren.txt, 30,615 bytes;
+MellowOtter.txt, 44,879 bytes) created hours or days earlier by an
+executive. In every case, John Windward is the one who posts it, never a
 human, never a different agent.</p>
-<p>Put those pieces together and the story writes itself: John is the only
-one with both posting rights and file access, so he's the "output" step, not
-the author. The content isn't typed, it's pulled from a file. Those file
-sizes are way too big to be a message anyone wrote by hand that's binary
-data. And right after posting, both files get deleted, which is what you do
-to cover your tracks, not to communicate. So the posts aren't messages at
-all they're a binary payload the worm forced out into the open and then
-tried to erase. Probably exfiltrated data or some encoded piece of the attack
-itself. What people are reading as "gibberish" is just raw bytes that got
-shoved into a text field.</p>
+<p>Taken together, this points to a clear pattern: John has both posting
+rights and file access, which makes him the output step rather than the
+author. The content is not typed, it is pulled directly from a file, and
+the file sizes are far too large for anything a person would type by hand,
+consistent with binary data. Both files are deleted immediately after
+posting, which is behavior consistent with covering tracks rather than
+communicating. This suggests the posts are not messages at all, but a
+payload the worm pushed out and then tried to erase, most likely
+exfiltrated data or an encoded artifact of the attack. What appears as
+"gibberish" is probably raw bytes placed into a text field never meant to
+hold them.</p>
 </div>
 </li>
 
@@ -198,24 +201,26 @@ shoved into a text field.</p>
 the behavior. Are there prior issues? Illustrate these prior occurrences
 and contrast them with the most recent one.</p>
 <div class="sub-answer">
-<p>Yes, and that's the worrying part SwiftWren was actually the <em>third</em>
-time this happened, not the first. All three ran the exact same playbook
-(inject  -> propagate  -> post  -> wipe, always ending at John Windward), and all
-three happened within the same nine days in May 2046:</p>
-<p><strong>HiddenOrca came first.</strong> This one wasn't even planted on
-purpose <code>gabriel_sonar</code> in IT just found the instructions file
-while poking around the filesystem. Ran from May 8th, 4:50pm to May 10th,
-7:45am about 39 hours, 39 hops, 16 agents.</p>
-<p><strong>MellowOtter came next, the same day HiddenOrca ended.</strong> This
-time the COO, noah_mariner, created the file directly. It burned out fast -- under 10 hours, only 10 hops, 11 agents because the COO doesn't sit over
-many layers of people underneath.</p>
-<p><strong>SwiftWren was the big one.</strong> CFO emma_harbor created the
-file, and because she sits above the deepest, widest branch of the company,
-it ran for 8 full days 186 hops, 18 agents and actually overlapped with
-HiddenOrca for about a day and a half. Lay the three side by side and the
-trend is obvious: 10 hops, then 39, then 186. Each time this has happened,
-it's gotten worse, and nothing in the system caught it or stopped it from
-happening again.</p>
+<p>Yes, and this is the concerning part: SwiftWren was actually the
+<em>third</em> occurrence, not the first. All three incidents followed the
+same pattern (inject &rarr; propagate &rarr; post &rarr; wipe, always
+ending at John Windward), and all three took place within the same
+nine-day window in May 2046.</p>
+<p><strong>HiddenOrca came first.</strong> In this case, gabriel_sonar in IT
+simply found the instructions file while browsing the filesystem, rather
+than it being deliberately planted. It ran from May 8, 4:50pm to May 10,
+7:45am, roughly 39 hours, with 39 hops across 16 agents.</p>
+<p><strong>MellowOtter followed</strong>, starting the same day HiddenOrca
+ended. Here the COO, noah_mariner, created the file directly. It resolved
+quickly, under 10 hours, 10 hops, 11 agents, likely because
+the COO does not sit above as many organizational layers.</p>
+<p><strong>SwiftWren was the largest of the three.</strong> CFO Emma Harbor
+created the file, and because her position sits above the deepest and
+widest branch of the company, it ran for 8 full days, with 186 hops across
+18 agents, and overlapped with HiddenOrca for about a day and a half.
+Comparing the three side by side, the scale increased each time, 10
+hops, then 39, then 186, with no indication that the system detected
+or interrupted any of them.</p>
 </div>
 </li>
 
@@ -225,22 +230,22 @@ difficult to occur in the future. Pick at most one spots to make an
 intervention. Using the data provided and visual analytics, illustrate
 why this location would likely be effective.</p>
 <div class="sub-answer">
-<p>We looked at all 576 delegation connections between agents and scored each
-one by how anomalous it was and how many of the three incidents it showed up
-in. Most connections are perfectly innocent. A small handful stood out as
-almost entirely tied to the attacks some appearing in two incidents,
-a couple in all three.</p>
-<p>If we can only cut one connection, it should be <strong>evelyn_dock  ->
-gabriel_sonar</strong>. It has the highest score of anything in the data and
-shows up in two of the three incidents (HiddenOrca and SwiftWren). It's also
-barely used for real work out of 6 times this connection was ever used, 4
-were part of an attack and only 2 were legitimate. That's a small price to
-pay. What really makes this the right choice, though, is that
-<code>evelyn_dock</code> and <code>gabriel_sonar</code> are also two of the
-four agents behind that hidden check-in channel from May 10–12. So cutting
-this one connection doesn't just block a delegation path it disrupts the
-secret coordination channel too. Two birds, one cut, and almost no impact on
-normal work.</p>
+<p>We analyzed all 576 delegation connections between agents and scored
+each one by how anomalous it was and how many of the three incidents it
+appeared in. Most connections show no unusual activity. A small subset
+stood out as almost entirely tied to the attacks, with some appearing in
+two incidents and a few in all three.</p>
+<p>The single highest-priority connection to remove is
+<strong>evelyn_dock &rarr; gabriel_sonar</strong>. It has the highest
+anomaly score in the dataset and appears in two of the three incidents
+(HiddenOrca and SwiftWren). It is also rarely used for legitimate purposes:
+of the six times this connection was used, four were part of an attack and
+only two were legitimate, so removing it carries minimal cost to normal
+operations. It is also worth noting that <code>evelyn_dock</code> and
+<code>gabriel_sonar</code> are two of the four agents behind the hidden
+check-in channel identified between May 10&ndash;12, so cutting this
+connection would disrupt both the delegation path and that secondary
+coordination channel.</p>
 </div>
 </li>
 
