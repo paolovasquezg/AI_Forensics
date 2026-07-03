@@ -27,7 +27,7 @@ It investigates a **prompt-injection worm** that spread through the multi-agent 
 
 - **Access** — the visualization can be accessed at [https://main.d2ta40s3u2erp5.amplifyapp.com/](https://main.d2ta40s3u2erp5.amplifyapp.com/).
 
-- **Documents** — the answers to the challenge are in [`index.html`](index.html) and the solution document in [`AI_Forensics.pdf`](AI_Forensics.pdf). An overview of the solution is on [`AI_Forensics_Overview`](AI_Forensics_Overview).
+- **Documents** — the answers to the challenge are in [`index.html`](index.html) and the solution document in [`AI_Forensics.pdf`](AI_Forensics.pdf). An overview of the solution is on [`AI_Forensics_Overview.pdf`](AI_Forensics_Overvie.pdf).
 
 ---
 
