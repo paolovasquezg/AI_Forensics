@@ -29,6 +29,8 @@ It investigates a **prompt-injection worm** that spread through the multi-agent 
 
 - **Documents** — the answers to the challenge are in [`index.html`](index.html) and the solution document in [`AI_Forensics.pdf`](AI_Forensics.pdf). An overview of the solution is on [`AI_Forensics_Overview.pdf`](AI_Forensics_Overview.pdf).
 
+- **Video review** — [https://youtu.be/lA86sA52hAM](https://youtu.be/lA86sA52hAM)
+
 ---
 
 ## Overview
